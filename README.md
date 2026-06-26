@@ -60,8 +60,10 @@ something I haven't learned" -> LEARN first, PRACTICE after the concept exists.
 
 ## Default teach loop (role-separated)
 
-The **tutor** teaches; an independent fresh-context **pedagogy-critic** runs the gate; a **researcher**
-sources external facts only when a mode needs them. The builder never grades its own work.
+The **tutor** teaches and self-checks inline; a **researcher** sources external facts only when a mode
+needs them. Live conversational turns run inline - the learner's explain-back is the verifier. An
+independent fresh-context **pedagogy-critic** runs the gate only at two boundaries: a LESSON-BUILD
+artifact and a MASTERY-CHECK "mastered" claim. The builder never certifies its own mastery.
 
 The work lives in a **vault** = one directory per learner+topic, `.supertutor/<topic>/`, holding
 `lesson-claims.json` (per turn: concept, definition, jargon terms, worked example, restatement prompt,
@@ -77,13 +79,15 @@ per-subskill accuracy, mastered concepts, review schedule). **No vault, no gate*
    definition in their own words. Write definition + worked example + restatement prompt into the vault.
 5. **Explain-back + grade** (tutor). Find the FIRST gap by the 6-type rubric; return one Socratic question.
    On "I don't know", back up a level - drop to a prerequisite, never rephrase at the same level.
-6. **Critique + gate** (pedagogy-critic, independent). Re-read the vault, run `lesson-gate.mjs`, and
-   enumerate every violation as `file:line` back into the vault.
-7. **Fix + re-run** (tutor). Address each violation with the minimal change; re-run the gate. Cap at 3
-   critique->fix cycles; persistent failure reports "needs human teacher review", never a soft-pass.
-8. **Advance or schedule** (tutor, gated). Only after the gate is green AND the learner passed two NOVEL
-   transfers unprompted: mark the concept mastered, fade support one level, schedule spaced retrieval
-   (1 day / 1 week / 1 month). On failure, re-teach through a *different* representation and return to step 5.
+6. **Critique + gate** (pedagogy-critic, independent - LESSON-BUILD and MASTERY-CHECK only). Re-read the
+   vault, run `lesson-gate.mjs`, and enumerate every violation as `file:line`. Live turns skip this - the
+   tutor self-checks inline.
+7. **Fix + re-run** (tutor; only when step 6 ran). Address each violation with the minimal change; re-run
+   the gate. Cap at 3 critique->fix cycles; persistent failure reports "needs human teacher review", never a soft-pass.
+8. **Advance or schedule** (tutor). Fade support one level inline as the learner answers cleanly without
+   hints. Stamping a concept `mastered` is a MASTERY-CHECK boundary - two unprompted novel transfers AND
+   the critic's gate green - then schedule spaced retrieval (1 day / 1 week / 1 month). On failure, re-teach
+   through a *different* representation and return to step 5.
 
 ## Quickstart
 

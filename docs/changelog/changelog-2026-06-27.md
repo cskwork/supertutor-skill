@@ -55,3 +55,25 @@ personas, bilingual README, and landing page, then an adversarial review (21 age
 
 Verification: `bash tests/run-all.sh` is all green (frontmatter+size gate, gate pass/fail scenarios with
 every sub-gate firing, mode-routing contract, reference-link contract); no emoji; EN/KO landing spans balanced.
+
+## Revision - scope the critic to artifact + certification boundaries
+
+- **Problem.** The role-separated loop, inherited from `supergoal`/`supercontent` (artifact-building
+  workflows), ran an independent pedagogy-critic round-trip per concept. For live tutoring that is wasted
+  latency: the learner's explain-back already exposes gaps in real time, so the human IS the per-turn
+  verifier. Self-approval bias only bites where no human is in the loop.
+- **Decision.** The critic now runs at exactly two no-human-in-the-loop boundaries: a **LESSON-BUILD**
+  artifact (others reuse it) and a **MASTERY-CHECK** "mastered" certification (a claim with consequences).
+  Live LEARN / FEYNMAN-DRILL / SOCRATIC-PROBE / PRACTICE / FIRST-PRINCIPLES / REPRESENT turns run inline:
+  the tutor teaches, grades restatements, ladders hints, and fades support itself. The `mastered` stamp
+  stays critic-only, so "no self-approval" is intact where it matters; in-session advancement is inline.
+- **Touched.** `SKILL.md` (principle, teach loop steps 6-8, gate intro, Done), `reference/pedagogy-core.md`
+  (role-separation section), `reference/first-principles.md`, `agents/tutor.md` (hand-off scoped to the two
+  boundaries), and `README.md` / `README.ko.md` loop mirrors. The gate script, sub-gates, vault schema, and
+  personas are unchanged - only *when* the gate runs is narrowed.
+- **Rejected alternative.** Remove the critic entirely (fastest). Rejected because it lets the tutor
+  self-stamp `mastered` and self-approve a reusable lesson - exactly the self-approval failure the role
+  separation exists to prevent, with no human to catch a fabricated fact or an unearned mastery claim in a
+  durable artifact.
+
+Verification: `bash tests/run-all.sh` still all green; frontmatter gate OK (combined desc 757/1536).

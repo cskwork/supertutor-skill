@@ -3,8 +3,8 @@
 Loaded in **FIRST-PRINCIPLES** mode (signals: "explain X from first principles", "break X down to
 fundamentals", "really understand how X works"; any engineering, physics, or systems concept). This is the
 flagship loop. It overlays `pedagogy-core.md`, never overrides it: still one concept per turn, still
-definition + concrete worked example + own-words restatement, still hints that ladder, still the
-independent critic runs the gate.
+definition + concrete worked example + own-words restatement, still hints that ladder, all self-checked
+inline - the independent critic runs the gate only to certify mastery or gate a built lesson.
 
 The loop has two phases. **Descend:** ask "why? / what is this made of?" until the learner reaches a named
 physical law or an honest "I don't know." **Ascend:** rebuild the solution using only the confirmed truths,

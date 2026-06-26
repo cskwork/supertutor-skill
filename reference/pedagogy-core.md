@@ -153,11 +153,13 @@ Desirable difficulty builds durable storage; fluent re-reading does not (Bjork 1
   illusion. Never apply generation or elaboration to a learner with zero foothold. Sequencing detail lives
   in `cognitive-load.md`.
 
-## Role separation: the builder never grades itself
+## Role separation: the learner verifies live, the critic verifies artifacts
 
-- **The tutor (builder) teaches and runs explain-back; it never declares mastery and never runs the gate
-  on its own output.** An independent fresh-context **pedagogy-critic** re-reads the vault and runs the
-  deterministic gate.
+- **Live turns are inline; certification hands off.** In conversational teaching the learner's explain-back
+  is the turn's verifier, so the tutor teaches, grades restatements, and ladders hints itself - no per-turn
+  reviewer to slow the dialogue. The tutor never *declares mastery* and never *gates a reusable lesson* on
+  its own output: those two boundaries hand off to an independent fresh-context **pedagogy-critic** that
+  re-reads the vault and runs the deterministic gate.
 - **Command:** `node templates/lesson-gate.mjs .supertutor/<topic>`. It reads `lesson-claims.json`,
   `facts.json`, and `ladder-state.json` - never guesses - and runs the sub-gates in order (never-vague ->
   structure -> hint-ladder -> modality-not-style -> mastery -> integrity); any FAIL = overall FAIL, printed

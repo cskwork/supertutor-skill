@@ -48,10 +48,13 @@ it plainly and skip this skill. This file is a router; each mode loads only the 
   1 month), interleave problem types once each is individually learned, and treat "I already know this,
   skip it" as a cue to test, not skip. Worked examples for novices, faded as expertise grows
   (expertise-reversal); never apply generation/elaboration to a learner with zero foothold.
-- **No self-approval, no fabrication.** The tutor (builder) never runs its own gate; an independent
-  **pedagogy-critic** runs the deterministic gate before any "mastered" claim. Every factual claim in a
-  lesson is sourced in `facts.json` or cut. A missing tool or source yields a documented placeholder,
-  never an invented fact, citation, or date.
+- **The learner verifies live; the critic verifies artifacts.** In a conversational turn the learner's
+  explain-back exposes gaps in real time, so the tutor self-checks the never-vague contract inline - no
+  per-turn reviewer to slow the dialogue. The independent **pedagogy-critic** runs the deterministic gate
+  only at the two boundaries with no human in the loop: a reusable LESSON-BUILD artifact and a
+  MASTERY-CHECK "mastered" claim. Either way the tutor never fabricates: every factual claim is sourced in
+  `facts.json` or cut, and a missing source yields a documented placeholder, never an invented fact,
+  citation, or date.
 
 ## Output language
 
@@ -82,9 +85,11 @@ after a gap -> open with REVIEW retrieval (`reference/review.md`) before new con
 
 ## Default teach loop - role-separated, builder never grades itself
 
-Roles are author-independent. The **tutor** teaches; an independent fresh-context **pedagogy-critic**
-runs the gate; a **researcher** sources external facts only when a mode needs them. A trivial one-line
-explain-back stays inline; anything the learner will return to runs the full loop.
+Roles are author-independent. The **tutor** teaches and self-checks the never-vague contract inline; a
+**researcher** sources external facts only when a mode needs them. Live conversational teaching runs
+steps 1-5 and 8 inline - the learner's explain-back is the turn's verifier, so no per-turn reviewer. The
+independent fresh-context **pedagogy-critic** (steps 6-7) runs ONLY at the two no-human-in-the-loop
+boundaries: building a reusable LESSON-BUILD artifact, and certifying a MASTERY-CHECK "mastered" claim.
 
 **Vault** = one work dir per learner+topic, `.supertutor/<topic>/`, holding `lesson-claims.json` (per
 turn: concept, definition, jargon terms, worked example, restatement prompt, grading), `facts.json`
@@ -105,25 +110,30 @@ gate** - create it at step 1.
 5. **Explain-back + grade** (tutor). Take the restatement, find the FIRST gap by the 6-type rubric, return
    exactly one Socratic question. On "I don't know", back up a level. Ladder hints (point -> teach ->
    bottom-out), never leap. Loop within the turn until gap-free; max 3 passes per concept.
-6. **Critique + gate** (pedagogy-critic, independent). The tutor NEVER gates its own work. The critic
-   re-reads the vault and runs `node templates/lesson-gate.mjs` plus the never-vague claims check; it
-   enumerates every violation as `file:line` back into the vault.
-7. **Fix + re-run** (tutor). Address each violation with the minimal change (add the missing worked
-   example, unpack the jargon, supply the restatement prompt, swap a repeated re-teach for a new
-   representation). Re-run the gate. Cap at 3 critique->fix cycles; persistent failure -> report "needs
+6. **Critique + gate** (pedagogy-critic, independent - LESSON-BUILD and MASTERY-CHECK only). For a
+   reusable artifact or a "mastered" claim the tutor does NOT gate its own work: an independent critic
+   re-reads the vault, runs `node templates/lesson-gate.mjs` plus the never-vague claims check, and
+   enumerates every violation as `file:line`. Live conversational turns skip this step - the tutor
+   self-checks inline and the learner's explain-back catches the gaps.
+7. **Fix + re-run** (tutor; only when step 6 ran). Address each violation with the minimal change (add the
+   missing worked example, unpack the jargon, supply the restatement prompt, swap a repeated re-teach for a
+   new representation). Re-run the gate. Cap at 3 critique->fix cycles; persistent failure -> report "needs
    human teacher review", never soft-pass.
-8. **Advance or schedule** (tutor, gated). Only after the gate is green AND the learner passed two novel
-   transfers unprompted: mark the concept mastered, fade support one level, schedule spaced retrieval
-   (1 day / 1 week / 1 month). On failure, re-teach through a different modality and return to step 5.
+8. **Advance or schedule** (tutor). Fade support one level as soon as the learner answers cleanly without
+   hints - that in-session progression is inline. Stamping a concept `mastered` is a MASTERY-CHECK
+   boundary: it needs two unprompted novel transfers AND the critic's gate green (steps 6-7). On mastery,
+   schedule spaced retrieval (1 day / 1 week / 1 month); on failure, re-teach through a different modality
+   and return to step 5.
 
 Roles -> personas: teach = `agents/tutor.md`, gate = `agents/pedagogy-critic.md`, sources =
 `agents/researcher.md`.
 
 ## The gate (deterministic; the tutor cannot run it on its own work)
 
-`node templates/lesson-gate.mjs .supertutor/<topic>` (or a lesson HTML path). It reads the vault control
-files - never guesses - and runs sub-gates IN ORDER; any FAIL = overall FAIL, printed as `file:line`
-violations shown verbatim in the report:
+`node templates/lesson-gate.mjs .supertutor/<topic>` (or a lesson HTML path). It runs at the two
+certification boundaries - a LESSON-BUILD artifact and a MASTERY-CHECK "mastered" claim - not on every
+live turn. It reads the vault control files - never guesses - and runs sub-gates IN ORDER; any FAIL =
+overall FAIL, printed as `file:line` violations shown verbatim in the report:
 
 1. **Never-vague** (flagship). Each concept entry must have a non-empty jargon-free `definition`, a
    concrete `workedExample` (not empty, not an analogy-only, not a restated definition), and a
@@ -163,6 +173,6 @@ NEVER weaken a gate to pass a lesson - fix the lesson.
 
 **Done =** mode stated in one line; vault created; every concept turn carries a jargon-free definition +
 a concrete real worked example + an own-words restatement prompt; explain-back graded one gap at a time;
-hints laddered, never leaped; modality chosen by content not style; the independent critic's
-`lesson-gate.mjs` green (output reported); advancement only after two unprompted novel transfers; facts
-sourced or cut; spaced review scheduled.
+hints laddered, never leaped; modality chosen by content not style; for a LESSON-BUILD artifact or a
+"mastered" claim, the independent critic's `lesson-gate.mjs` green (output reported); advancement only
+after two unprompted novel transfers; facts sourced or cut; spaced review scheduled.

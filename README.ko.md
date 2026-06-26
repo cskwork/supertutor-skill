@@ -39,7 +39,7 @@
 
 ## 기본 teach loop (역할 분리)
 
-**tutor**가 가르치고, 독립적이고 신선한 컨텍스트의 **pedagogy-critic**이 gate를 실행하며, **researcher**는 모드가 필요로 할 때만 외부 사실의 출처를 댑니다. builder는 자기 작업을 절대 스스로 채점하지 않습니다.
+**tutor**가 가르치고 인라인으로 자가 점검하며, **researcher**는 모드가 필요로 할 때만 외부 사실의 출처를 댑니다. 라이브 대화 턴은 인라인으로 진행됩니다 - 학습자의 explain-back이 그 턴의 검증자입니다. 독립적이고 신선한 컨텍스트의 **pedagogy-critic**은 두 경계에서만 gate를 실행합니다: LESSON-BUILD 산출물과 MASTERY-CHECK "mastered" 주장. builder는 자기 숙달을 절대 스스로 인증하지 않습니다.
 
 작업은 **vault** = 학습자+주제당 하나의 디렉터리 `.supertutor/<topic>/`에 담기며, 여기에는 `lesson-claims.json`(턴마다: 개념, 정의, 전문 용어, worked example, 재진술 프롬프트, 채점), `facts.json`(출처가 달린 사실, `[]`일 수 있음), `ladder-state.json`(Bloom 레벨, Dreyfus 단계, 하위 기능별 정확도, 숙달한 개념, 복습 일정)이 들어갑니다. **vault 없으면 gate 없음** - 1단계에서 만드세요.
 
@@ -48,9 +48,9 @@
 3. **Research** (researcher; 외부 사실이 필요할 때만). 모든 주장, 공식, 날짜가 있는 수치를 출처 URL과 함께 `facts.json`에 검증합니다. 검증 불가 -> 문서화된 placeholder. 순수 추론이면 건너뜁니다.
 4. **Teach** (tutor). 모드의 형식대로 턴을 전달한 뒤, 항상 학습자에게 정의를 자기 말로 재진술하도록 프롬프트합니다. 정의 + worked example + 재진술 프롬프트를 vault에 씁니다.
 5. **Explain-back + grade** (tutor). 6유형 루브릭으로 FIRST 빈틈을 찾아 Socratic 질문 하나를 돌려줍니다. "모르겠어요"에는 한 레벨 내려가 - 선행 개념으로 떨어뜨리고, 같은 레벨에서 다시 표현하지 않습니다.
-6. **Critique + gate** (pedagogy-critic, 독립). vault를 다시 읽고 `lesson-gate.mjs`를 실행하며, 모든 위반을 `file:line`으로 vault에 다시 적습니다.
-7. **Fix + re-run** (tutor). 각 위반을 최소 변경으로 처리하고 gate를 다시 실행합니다. critique->fix 사이클은 3회로 제한하며, 계속 실패하면 "needs human teacher review"로 보고하고 절대 soft-pass하지 않습니다.
-8. **Advance or schedule** (tutor, gated). gate가 green이고 AND 학습자가 새로운 전이 두 개를 힌트 없이 통과한 뒤에만: 개념을 mastered로 표시하고, 지원을 한 레벨 줄이며, 분산 인출을 예약합니다(1일 / 1주 / 1개월). 실패하면 *다른* 표현으로 다시 가르치고 5단계로 돌아갑니다.
+6. **Critique + gate** (pedagogy-critic, 독립 - LESSON-BUILD와 MASTERY-CHECK에서만). vault를 다시 읽고 `lesson-gate.mjs`를 실행하며, 모든 위반을 `file:line`으로 적습니다. 라이브 턴은 이 단계를 건너뜁니다 - 튜터가 인라인으로 자가 점검합니다.
+7. **Fix + re-run** (tutor; 6단계가 실행됐을 때만). 각 위반을 최소 변경으로 처리하고 gate를 다시 실행합니다. critique->fix 사이클은 3회로 제한하며, 계속 실패하면 "needs human teacher review"로 보고하고 절대 soft-pass하지 않습니다.
+8. **Advance or schedule** (tutor). 학습자가 힌트 없이 깔끔하게 답하면 지원을 한 레벨 줄이는 것은 인라인입니다. 개념을 `mastered`로 찍는 것은 MASTERY-CHECK 경계입니다 - 힌트 없는 새로운 전이 두 개 AND critic의 gate green - 그 뒤 분산 인출을 예약합니다(1일 / 1주 / 1개월). 실패하면 *다른* 표현으로 다시 가르치고 5단계로 돌아갑니다.
 
 ## Quickstart
 
