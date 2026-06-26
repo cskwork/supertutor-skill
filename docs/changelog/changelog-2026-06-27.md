@@ -69,7 +69,8 @@ every sub-gate firing, mode-routing contract, reference-link contract); no emoji
   stays critic-only, so "no self-approval" is intact where it matters; in-session advancement is inline.
 - **Touched.** `SKILL.md` (principle, teach loop steps 6-8, gate intro, Done), `reference/pedagogy-core.md`
   (role-separation section), `reference/first-principles.md`, `agents/tutor.md` (hand-off scoped to the two
-  boundaries), and `README.md` / `README.ko.md` loop mirrors. The gate script, sub-gates, vault schema, and
+  boundaries), `README.md` / `README.ko.md` loop mirrors, and `docs/index.html` (role-separated-loop section:
+  step 6 scoped, step 8 fade made inline, intro clarified). The gate script, sub-gates, vault schema, and
   personas are unchanged - only *when* the gate runs is narrowed.
 - **Rejected alternative.** Remove the critic entirely (fastest). Rejected because it lets the tutor
   self-stamp `mastered` and self-approve a reusable lesson - exactly the self-approval failure the role
