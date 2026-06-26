@@ -102,6 +102,10 @@ Verification: `bash tests/run-all.sh` still all green; frontmatter gate OK (comb
 - **Rejected alternative.** Ship it as an opt-in mode triggered only on request, default staying terminal
   prose. Rejected by the user in favor of a global default (terminal prose becomes the explicit opt-out), so
   every topic gets the card unless the learner asks for text.
+- **Landing synced.** `docs/index.html`: teach-loop step 4 now states the explanation renders to a
+  `material/` HTML card while questions stay in the terminal; the vault tree shows `material/*.html` as the
+  default, ungated delivery (kept out of the "three control files" list, since a card is neither a control
+  file nor gated).
 
 Verification: frontmatter gate OK (body 17100 chars, under the 20000 warn; combined desc 757/1536);
 `node templates/lesson-gate.mjs .supertutor/kafka` -> GATE PASS; all vault/seed JSON parses clean.
