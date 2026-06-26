@@ -78,3 +78,30 @@ every sub-gate firing, mode-routing contract, reference-link contract); no emoji
   durable artifact.
 
 Verification: `bash tests/run-all.sh` still all green; frontmatter gate OK (combined desc 757/1536).
+
+## Revision - HTML cards as the default live-teaching delivery
+
+- **Problem / request.** Live turns dumped the whole explanation (definition + worked example) as terminal
+  prose, mixed with the questions. The user wanted the *explanation* rendered as readable HTML while the
+  *dialogue* (questions, grading, hints) stayed in the terminal where the back-and-forth happens.
+- **Decision.** Make an HTML "card" the **default** delivery for every live concept turn: the tutor renders
+  the concept's `definition` + `workedExample` into `material/concept-NN.html` (built from the shared
+  `templates/teach/assets/` scaffold so cards match the LESSON-BUILD look) and hands the learner a path; the
+  one-line mode, `restatementPrompt`, one-gap grading, and hint ladder stay in the terminal. The never-vague
+  triple still lands in `lesson-claims.json` every turn - the card is the *rendering*, the vault is the
+  *record*. Opt out per-topic with `ladder-state.json.delivery: "terminal-text"` ("text only" / "터미널로").
+- **Why cards are NOT gated.** `lesson-gate.mjs` scans `lessons/` (reusable book artifacts) only - it never
+  walks `material/`. That matches the existing rule that *live turns skip the gate*; the learner's
+  explain-back is the live verifier. So a card needs no book scaffold (no TOC/pager/`.sg-quiz`) - questions
+  live in the terminal, not the card. The deterministic gate and its six sub-gates are unchanged.
+- **Touched.** `SKILL.md` (new "Output and delivery" section, vault contents, teach-loop step 4, Done line);
+  `templates/teach/assets/material-card.html` (new single-concept card template, non-book); `lesson.css`
+  (additive `.sg-def` definition box + jargon `<dl>` styling - safe, never touches the book layout);
+  `reference/workspace.md` (new "Live HTML cards" section, `material/`+`assets/` in the layout, `delivery`
+  field in the ladder-state schema); `templates/workspace/ladder-state.example.json` (`delivery` seed).
+- **Rejected alternative.** Ship it as an opt-in mode triggered only on request, default staying terminal
+  prose. Rejected by the user in favor of a global default (terminal prose becomes the explicit opt-out), so
+  every topic gets the card unless the learner asks for text.
+
+Verification: frontmatter gate OK (body 17100 chars, under the 20000 warn; combined desc 757/1536);
+`node templates/lesson-gate.mjs .supertutor/kafka` -> GATE PASS; all vault/seed JSON parses clean.

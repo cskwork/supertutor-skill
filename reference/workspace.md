@@ -24,6 +24,8 @@ section of the first.
   facts.json           # ARRAY: sourced external facts (may be []); placeholders marked
   ladder-state.json    # OBJECT: Bloom/Dreyfus placement + mastery + review schedule
   lessons/*.html       # optional: LESSON-BUILD artifacts, gated by the same script
+  material/*.html      # default-delivery live cards (one per concept turn); live artifacts, NOT gated
+  assets/              # copy of templates/teach/assets/ (shared lesson.css etc.); cards link ../assets/lesson.css
   gate-report.md       # critic output: each violation as file:locator + one fix (the critic writes this)
 ```
 
@@ -34,6 +36,23 @@ are personal learning data and are git-ignored; only the `templates/` seed is co
 Who writes what: the **tutor** writes `lesson-claims.json` and updates `ladder-state.json` every turn;
 the **researcher** writes `facts.json` only when a mode needs external facts; the **pedagogy-critic**
 only reads - it never edits a claim, it writes violations back as `file:line`.
+
+## Live HTML cards (material/) - the default delivery
+
+By default each live concept turn delivers its explanation as a card, not as terminal prose. The tutor
+copies `templates/teach/assets/` into the vault's `assets/` once, then builds one
+`material/concept-NN.html` per turn from `material-card.html` (shared `lesson.css`, so every card matches
+the course). The card holds the never-vague pair the learner reads - the jargon-free `definition` (in a
+`<dfn>`/`.sg-def` anchor) and the concrete `workedExample` - while the **terminal** keeps everything the
+learner must act on: the one-line mode, the `restatementPrompt`, the one-gap grading, and the hint ladder.
+The card is the rendering; `lesson-claims.json` stays the record, written in full every turn exactly as
+before.
+
+A card is a **live-turn artifact and is NOT gated**: `lesson-gate.mjs` scans `lessons/` (book artifacts)
+only, never `material/`, matching the rule that live turns skip the gate. So a card never needs the book
+scaffold (no TOC, no pager, no `.sg-quiz`) - questions live in the terminal, not the card. Set
+`ladder-state.json.delivery` to `"terminal-text"` when the learner opts out ("text only" / "터미널로");
+then skip the card and put the explanation in terminal prose.
 
 ## lesson-claims.json
 
@@ -181,6 +200,7 @@ A single OBJECT: the learner's current placement plus the mastery and review rec
 {
   "learner": "alex",
   "topic": "beam-deflection",
+  "delivery": "html-card",
   "bloomLevel": "Analyze",
   "dreyfusStage": "advanced-beginner",
   "subskills": {
@@ -210,6 +230,9 @@ A single OBJECT: the learner's current placement plus the mastery and review rec
 
 Field rules:
 
+- `delivery` - how the explanation is rendered: `html-card` (default - definition + worked example go to a
+  `material/concept-NN.html` card, dialogue stays in the terminal) or `terminal-text` (opt-out - explanation
+  as terminal prose). The gate ignores this field; it only steers the tutor's delivery.
 - `bloomLevel` - the cognitive-demand rung (`Remember | Understand | Apply | Analyze | Evaluate | Create`).
   `dreyfusStage` - the skill stage (`novice | advanced-beginner | competent | proficient | expert | master`).
   Both are defined in `mastery-ladder.md`; set them in DIAGNOSE from the highest probe passed without hints.

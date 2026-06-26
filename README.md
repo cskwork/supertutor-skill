@@ -68,15 +68,18 @@ artifact and a MASTERY-CHECK "mastered" claim. The builder never certifies its o
 The work lives in a **vault** = one directory per learner+topic, `.supertutor/<topic>/`, holding
 `lesson-claims.json` (per turn: concept, definition, jargon terms, worked example, restatement prompt,
 grading), `facts.json` (sourced facts, may be `[]`), and `ladder-state.json` (Bloom level, Dreyfus stage,
-per-subskill accuracy, mastered concepts, review schedule). **No vault, no gate** - create it at step 1.
+per-subskill accuracy, mastered concepts, review schedule), plus `material/*.html` (the default-delivery
+HTML cards, one per live concept turn). **No vault, no gate** - create it at step 1.
 
 1. **Frame** (tutor). Classify into one mode in a single line. Create or locate the vault.
 2. **Diagnose** (tutor). Probe prior knowledge with low-stakes openers - a define probe, an apply probe on
    a novel variant, an analyze probe - before teaching. Record the highest level passed *without hints*.
 3. **Research** (researcher; only if external facts are needed). Verify every claim, formula, or dated
    figure into `facts.json` with source URLs. Unverifiable -> documented placeholder. Skip for pure reasoning.
-4. **Teach** (tutor). Deliver the turn in the mode's shape, then ALWAYS prompt the learner to restate the
-   definition in their own words. Write definition + worked example + restatement prompt into the vault.
+4. **Teach** (tutor). Deliver the turn in the mode's shape. By default the explanation (definition + worked
+   example) renders to an HTML card in `material/`; the restatement prompt, grading, and hints stay in the
+   terminal (opt out with "text only"). ALWAYS prompt the learner to restate the definition in their own
+   words. Write definition + worked example + restatement prompt into the vault.
 5. **Explain-back + grade** (tutor). Find the FIRST gap by the 6-type rubric; return one Socratic question.
    On "I don't know", back up a level - drop to a prerequisite, never rephrase at the same level.
 6. **Critique + gate** (pedagogy-critic, independent - LESSON-BUILD and MASTERY-CHECK only). Re-read the

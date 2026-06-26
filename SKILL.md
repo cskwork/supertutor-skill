@@ -56,11 +56,21 @@ it plainly and skip this skill. This file is a router; each mode loads only the 
   `facts.json` or cut, and a missing source yields a documented placeholder, never an invented fact,
   citation, or date.
 
-## Output language
+## Output and delivery
 
 Prose in the learner's language; keep identifiers, file paths, commands, JSON keys, and the gate's
 machine-checked anchors in canonical English so the checks keep matching. No emoji; CommonMark blank-line
 spacing.
+
+**Default delivery: the explanation is an HTML card, the dialogue is the terminal.** Every live concept
+turn renders its definition + worked example into a standalone card in the vault
+(`material/concept-NN.html`, built from `templates/teach/assets/` so each card matches the course look).
+The terminal then carries only what the learner must *act on* - the one-line mode, the restatement prompt,
+the one-gap grading, and the hint ladder - plus a relative path to open the card. The never-vague triple
+still lands in `lesson-claims.json` every turn: the card is the rendering, the vault is the record. A
+learner can opt out ("text only" / "터미널로") to receive the explanation as terminal prose instead. Cards
+are live-turn artifacts and are NOT gated - the gate still certifies only the `lessons/` book artifacts and
+the control files; the card contract lives in `reference/workspace.md`.
 
 ## Mode (classify the request, state it in one line)
 
@@ -94,8 +104,9 @@ boundaries: building a reusable LESSON-BUILD artifact, and certifying a MASTERY-
 **Vault** = one work dir per learner+topic, `.supertutor/<topic>/`, holding `lesson-claims.json` (per
 turn: concept, definition, jargon terms, worked example, restatement prompt, grading), `facts.json`
 (sourced facts, may be `[]`), and `ladder-state.json` (Bloom level, Dreyfus stage, per-subskill accuracy,
-ZPD target, mastered concepts, review schedule). Start each from `templates/workspace/`. **No vault, no
-gate** - create it at step 1.
+ZPD target, mastered concepts, review schedule), plus `material/*.html` (the default-delivery HTML cards,
+one per live concept turn) beside an `assets/` copy of `templates/teach/assets/`. Start each from
+`templates/workspace/`. **No vault, no gate** - create it at step 1.
 
 1. **Frame** (tutor). Classify into one mode in a single line. Create/locate the vault.
 2. **Diagnose** (tutor). Probe prior knowledge with low-stakes openers before teaching - a define probe,
@@ -104,9 +115,12 @@ gate** - create it at step 1.
 3. **Research** (researcher; only if external facts are needed). Verify every factual claim, formula,
    dated figure, or citation into `facts.json` with source URLs. Unverifiable -> documented placeholder,
    never an invented fact. Skip entirely for pure-reasoning concepts.
-4. **Teach** (tutor). Deliver the turn in the mode's shape. ALWAYS end by prompting the learner to restate
-   the definition (and any analogy) in their own words. Write definition + worked example + restatement
-   prompt into `lesson-claims.json`.
+4. **Teach** (tutor). Deliver the turn in the mode's shape. By default render the concept's definition +
+   worked example into `material/concept-NN.html` (copy `templates/teach/assets/` into the vault's
+   `assets/` once, then build from `material-card.html`) and hand the learner the path; the restatement
+   prompt and all grading stay in the terminal. ALWAYS end by prompting the learner to restate the
+   definition (and any analogy) in their own words. Write definition + worked example + restatement prompt
+   into `lesson-claims.json`.
 5. **Explain-back + grade** (tutor). Take the restatement, find the FIRST gap by the 6-type rubric, return
    exactly one Socratic question. On "I don't know", back up a level. Ladder hints (point -> teach ->
    bottom-out), never leap. Loop within the turn until gap-free; max 3 passes per concept.
@@ -173,6 +187,8 @@ NEVER weaken a gate to pass a lesson - fix the lesson.
 
 **Done =** mode stated in one line; vault created; every concept turn carries a jargon-free definition +
 a concrete real worked example + an own-words restatement prompt; explain-back graded one gap at a time;
-hints laddered, never leaped; modality chosen by content not style; for a LESSON-BUILD artifact or a
-"mastered" claim, the independent critic's `lesson-gate.mjs` green (output reported); advancement only
-after two unprompted novel transfers; facts sourced or cut; spaced review scheduled.
+hints laddered, never leaped; modality chosen by content not style; by default the concept's definition +
+worked example delivered as a `material/` HTML card while restatement, grading, and hints stay in the
+terminal; for a LESSON-BUILD artifact or a "mastered" claim, the independent critic's `lesson-gate.mjs`
+green (output reported); advancement only after two unprompted novel transfers; facts sourced or cut;
+spaced review scheduled.

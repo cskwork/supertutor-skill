@@ -1,5 +1,6 @@
 {
   "topic": "beam-deflection",
+  "delivery": "html-card",
   "bloomLevel": "Analyze",
   "dreyfusStage": "advanced-beginner",
   "subskills": { "bending-stress": 0.8, "second-moment-of-area": 0.7, "deflection-scaling": 0.6 },

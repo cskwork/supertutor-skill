@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{CONCEPT TITLE}}</title>
+  <link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<!-- Live teaching card: ONE concept's definition + worked example, rendered to read.
+     Questions never live here. The restatement prompt, the one-gap grading, and the hint
+     ladder all stay in the terminal -- this card is the explanation, not the dialogue.
+     NOT a paged book and NOT gated by lesson-gate.mjs (that gates lessons/ only). Build one
+     per live concept turn as material/concept-NN.html; reuse assets/lesson.css for one look. -->
+<main class="card">
+  <p class="eyebrow">{{TOPIC}} · 개념 {{NN}}</p>
+  <h1>{{CONCEPT TITLE}}</h1>
+
+  <!-- never-vague 1/3: a jargon-free definition. <dfn> inside .sg-def is the definition anchor. -->
+  <p class="sg-def"><dfn>{{term}}</dfn> — {{전문용어 없이 한두 문장으로 푼 정의}}</p>
+
+  <!-- jargon unpacked: every term named above gets a plain gloss before it is leaned on. -->
+  <dl>
+    <dt>{{jargon term}}</dt><dd>{{쉬운 말 풀이}}</dd>
+  </dl>
+
+  <!-- never-vague 2/3: ONE concrete, REAL worked example -- a solved instance, not an analogy. -->
+  <h2>예를 들어</h2>
+  <div class="callout worked">
+    <p>{{손으로 따라갈 수 있는 구체 예시 한 개 — 실제 값/객체/단계}}</p>
+  </div>
+
+  <!-- optional: a numbered trace when the example is sequential or causal. Delete if not needed. -->
+  <ol class="trace">
+    <li>{{단계 1}}</li>
+    <li>{{단계 2}}</li>
+  </ol>
+
+  <!-- optional analogy, tagged -- only IN ADDITION to the worked example, never instead of it. -->
+  <p class="callout later"><strong>비유(참고용):</strong> {{비유 한 줄}}</p>
+
+  <!-- the common misconception this concept clears up. -->
+  <p class="callout later"><strong>흔한 오해:</strong> {{자주 헷갈리는 지점}}</p>
+
+  <footer>
+    <!-- keep the source line ONLY when the concept is factual:true; point at the facts.json url. -->
+    <p class="cite">출처: <a href="{{URL}}">{{권위 있는 출처 — facts.json}}</a></p>
+    <p><strong>이제 터미널로:</strong> 본인 말로 다시 설명할 차례입니다. 질문 · 채점 · 힌트는 모두 터미널에서 진행합니다.</p>
+  </footer>
+</main>
+</body>
+</html>

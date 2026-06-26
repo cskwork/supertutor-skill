@@ -181,6 +181,15 @@ pre code { background: none; padding: 0; }
 
 footer { margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--line); color: var(--ink-soft); font-size: var(--step--1); font-family: var(--font-ui); }
 
+/* live teaching card (material/concept-NN.html): a standalone single-concept page, non-book.
+   reuses the prose tokens above; these add the never-vague definition box + jargon list. */
+.sg-def { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: var(--space-2) var(--space-3); border-radius: 0 var(--radius) var(--radius) 0; margin: var(--space-3) 0; }
+.sg-def dfn { font-style: normal; font-family: var(--font-ui); font-weight: 700; color: var(--accent); }
+.callout.worked { border-left: 3px solid var(--ok); }
+dl { margin: var(--space-2) 0; }
+dt { font-family: var(--font-mono); color: var(--accent); font-weight: 600; margin-top: var(--space-2); }
+dd { margin: 0 0 var(--space-1) var(--space-3); color: var(--ink-soft); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
