@@ -58,9 +58,11 @@ it plainly and skip this skill. This file is a router; each mode loads only the 
 
 ## Output and delivery
 
-Prose in the learner's language; keep identifiers, file paths, commands, JSON keys, and the gate's
-machine-checked anchors in canonical English so the checks keep matching. No emoji; CommonMark blank-line
-spacing.
+Prose in the learner's language, written the way a fluent native speaker would write it - idiomatic,
+grammatically correct, sentences that connect smoothly, never stiff translation-ese. (Korean, for example:
+natural connective endings and sentence flow, consistent terminology, no dash-spliced fragments.) Keep
+identifiers, file paths, commands, JSON keys, and the gate's machine-checked anchors in canonical English
+so the checks keep matching. No emoji; CommonMark blank-line spacing.
 
 **Default delivery: the explanation is an HTML card, the dialogue is the terminal.** Every live concept
 turn renders its definition + worked example into a standalone card in the vault

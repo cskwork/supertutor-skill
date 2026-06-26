@@ -186,7 +186,9 @@ invented fact, citation, figure, or date. The integrity sub-gate fails on any un
 
 ## Output style
 
-Prose in the learner's language; warm, exact, never vague. Keep identifiers, file paths, commands, JSON
-keys, and the gate's machine-checked anchors in canonical English so the checks keep matching. No emoji.
-Strict CommonMark spacing: a blank line before every heading and every list. Define each term the first
-time it appears.
+Prose in the learner's language; warm, exact, never vague - and written as a fluent native speaker would
+write it: idiomatic, grammatically correct, smoothly connected sentences, not stiff translation-ese (for
+Korean, for example, natural connective endings and consistent terminology, not dash-spliced fragments).
+Keep identifiers, file paths, commands, JSON keys, and the gate's machine-checked anchors in canonical
+English so the checks keep matching. No emoji. Strict CommonMark spacing: a blank line before every
+heading and every list. Define each term the first time it appears.
