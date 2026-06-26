@@ -1,0 +1,8 @@
+[
+  {
+    "id": "euler-bernoulli",
+    "claim": "Cantilever tip deflection under a point load is F*L^3/(3*E*I) (Euler-Bernoulli beam theory).",
+    "url": "https://en.wikipedia.org/wiki/Deflection_(engineering)",
+    "retrievedDate": "2026-06-26"
+  }
+]

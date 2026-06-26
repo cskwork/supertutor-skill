@@ -1,0 +1,20 @@
+# Personal learning data -- never commit a learner's vault, records, lessons, or journal.
+# Only the templates/ seed is committed (see reference/workspace.md).
+.supertutor/
+teach/*/
+teach/USER_PREFERENCE.md
+
+# Node / tooling
+node_modules/
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python (if any helper scripts appear)
+__pycache__/
+*.pyc

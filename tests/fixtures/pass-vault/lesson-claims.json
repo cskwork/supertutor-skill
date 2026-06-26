@@ -1,0 +1,44 @@
+{
+  "topic": "beam-deflection",
+  "concepts": [
+    {
+      "id": "bending-stress",
+      "definition": "When you push down on a beam, the top edge gets squeezed shorter and the bottom edge gets stretched longer; the internal push-back per unit of cross-section area that resists this is the bending stress.",
+      "jargonTerms": ["bending stress"],
+      "unpacked": { "bending stress": "internal push-back force spread over each bit of cross-section area" },
+      "workedExample": { "type": "worked", "content": "A 2 m steel ruler clamped at one end with a 1 kg weight at the tip: the top-surface fibers shorten, the bottom fibers lengthen, and the stress is largest at the clamped end where the bending is greatest." },
+      "restatementPrompt": "In your own words, what happens to the top and bottom of the beam, and where is the stress largest?",
+      "factual": false
+    },
+    {
+      "id": "second-moment-of-area",
+      "definition": "A number that says how much a beam cross-section shape resists bending, just from how its material is spread out away from the center line: material far from the center fights bending much harder.",
+      "jargonTerms": ["second moment of area"],
+      "unpacked": { "second moment of area": "how the cross-section area is distributed relative to the bending axis; far-out material counts a lot more" },
+      "workedExample": { "type": "worked", "content": "An I-beam puts most of its steel in the top and bottom flanges, far from the center, so for the same weight of steel it resists sagging far more than a solid square bar of the same area." },
+      "restatementPrompt": "Explain, in your own words, why an I-beam resists sag better than a square bar of the same material.",
+      "factual": false,
+      "modality": { "contentStructure": "spatial" }
+    },
+    {
+      "id": "cantilever-deflection-scaling",
+      "definition": "The tip sag of a loaded beam grows with the load and very fast with length, and shrinks as the material gets stiffer and the cross-section spreads its material farther out.",
+      "jargonTerms": ["deflection"],
+      "unpacked": { "deflection": "how far the beam moves from its straight resting position" },
+      "workedExample": { "type": "worked", "content": "For a cantilever with a tip load, sag = F*L^3/(3*E*I): doubling the length L makes it sag 8x more (2^3), while doubling I (a stiffer shape) halves the sag, so a beam twice as long needs 8x the stiffness to sag the same amount." },
+      "restatementPrompt": "Without using the formula, explain why a beam twice as long sags far more than just twice as much.",
+      "factual": true,
+      "factRefs": ["euler-bernoulli"]
+    }
+  ],
+  "gradings": [
+    { "conceptId": "bending-stress", "gapType": "causal", "followUpQuestion": "What makes the bottom fibers stretch rather than squeeze?" },
+    { "conceptId": "second-moment-of-area", "gapType": "none", "followUpQuestion": "" },
+    { "conceptId": "cantilever-deflection-scaling", "gapType": "boundary", "followUpQuestion": "Where would this length-cubed rule stop holding?" }
+  ],
+  "turns": [
+    { "index": 0, "stuckPoint": "why length cubed", "hintLevel": 1, "learnerIDK": false },
+    { "index": 1, "stuckPoint": "why length cubed", "hintLevel": 2, "learnerIDK": false },
+    { "index": 2, "stuckPoint": "why length cubed", "hintLevel": 3, "recoveryPrompt": "Now explain, in your own words, why the exponent is 3 and not 1.", "learnerIDK": false }
+  ]
+}

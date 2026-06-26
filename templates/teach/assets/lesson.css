@@ -1,0 +1,246 @@
+/*
+  TEACH lesson shared stylesheet (Expressive baseline, Tufte-influenced).
+  Reused by every lesson in a workspace so the course looks like one thing.
+  Standards: reference/ui-ux.md (Expressive), reference/engagement.md
+  (micro-interaction feedback), WCAG 2.2 (focus, target size, reduced motion).
+  Copied into teach/<topic>/assets/ on the first lesson; do not inline-duplicate.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  /* one type scale */
+  --font-body: ui-serif, Georgia, "Times New Roman", serif;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+  --step-1: clamp(1.2rem, 1.12rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.5rem, 1.36rem + 0.7vw, 1.9rem);
+  --step-3: clamp(1.9rem, 1.65rem + 1.2vw, 2.6rem);
+
+  /* one spacing scale */
+  --space-1: 0.375rem;
+  --space-2: 0.75rem;
+  --space-3: 1.25rem;
+  --space-4: 2rem;
+  --space-5: 3.25rem;
+
+  --radius: 10px;
+  --measure: 68ch;
+
+  /* light tokens */
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface-2: #f1efe9;
+  --ink: #1c1b19;
+  --ink-soft: #555049;
+  --line: #e3ded3;
+  --accent: #3b4cca;
+  --accent-soft: #e9ebfb;
+  --ok: #1f7a4d;
+  --ok-soft: #e3f3ea;
+  --bad: #b3261e;
+  --bad-soft: #fbe7e6;
+  --code-bg: #f4f2ec;
+  --shadow: 0 1px 2px rgba(28, 27, 25, 0.06), 0 6px 20px rgba(28, 27, 25, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --surface-2: #1d2027;
+    --ink: #ece9e2;
+    --ink-soft: #a7a299;
+    --line: #2a2e37;
+    --accent: #8b9bff;
+    --accent-soft: #1c2140;
+    --ok: #5ad19a;
+    --ok-soft: #16271f;
+    --bad: #ff8a82;
+    --bad-soft: #2a1715;
+    --code-bg: #1b1e25;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+main {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3) var(--space-5);
+}
+
+h1, h2, h3, .eyebrow, .quiz, .menu, button, .pill, th, .viz, code {
+  font-family: var(--font-ui);
+}
+
+.eyebrow {
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 var(--space-1);
+}
+
+h1 { font-size: var(--step-3); line-height: 1.1; margin: 0 0 var(--space-2); font-weight: 700; }
+h2 { font-size: var(--step-2); line-height: 1.2; margin: var(--space-5) 0 var(--space-2); font-weight: 650; }
+h3 { font-size: var(--step-1); margin: var(--space-4) 0 var(--space-1); font-weight: 600; }
+
+p { margin: 0 0 var(--space-2); }
+a { color: var(--accent); text-underline-offset: 3px; }
+
+.lede { font-size: var(--step-1); color: var(--ink-soft); line-height: 1.5; }
+
+/* hook / core question */
+.hook {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: var(--space-3) 0;
+}
+.hook strong { font-family: var(--font-ui); }
+
+/* key-terms table */
+table { width: 100%; border-collapse: collapse; margin: var(--space-2) 0; font-size: var(--step--1); }
+th, td { text-align: left; padding: var(--space-2); border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.02em; }
+tbody tr:hover { background: var(--surface-2); }
+.term { font-family: var(--font-mono); color: var(--accent); white-space: nowrap; }
+
+/* process-trace steps */
+.trace { counter-reset: step; list-style: none; padding: 0; margin: var(--space-2) 0; }
+.trace li {
+  counter-increment: step;
+  position: relative;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+.trace li::before {
+  content: counter(step);
+  position: absolute; left: var(--space-2); top: var(--space-2);
+  width: 1.75rem; height: 1.75rem;
+  display: grid; place-items: center;
+  font-family: var(--font-ui); font-size: var(--step--1); font-weight: 600;
+  color: #fff; background: var(--accent); border-radius: 50%;
+}
+.trace li.fail::before { content: "!"; background: var(--bad); }
+
+/* callouts */
+.callout { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3); margin: var(--space-3) 0; box-shadow: var(--shadow); }
+.callout.takeaway { border-color: var(--accent); background: var(--accent-soft); }
+.callout.later { color: var(--ink-soft); font-size: var(--step--1); background: var(--surface-2); border-style: dashed; }
+
+/* code citation — small footnote-style source pointer under a claim (file:line, source name) */
+.cite { display: block; margin-top: var(--space-1); padding-left: var(--space-2); border-left: 2px solid var(--line); font-size: var(--step--1); color: var(--ink-soft); }
+.cite code { background: var(--surface-2); }
+
+/* code */
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3); overflow-x: auto; font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; }
+code { font-family: var(--font-mono); font-size: 0.92em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 5px; }
+pre code { background: none; padding: 0; }
+
+/* shared focus ring (a11y) */
+:where(a, button, [tabindex]):focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* quiz widget (hydrated by quiz.js) */
+.sg-quiz { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-3); margin: var(--space-3) 0; box-shadow: var(--shadow); }
+.sg-q { font-family: var(--font-ui); font-weight: 600; margin-bottom: var(--space-2); }
+.sg-choices { display: grid; gap: var(--space-1); }
+.sg-option {
+  text-align: left; font-size: var(--step-0); line-height: 1.4;
+  min-height: 44px; padding: var(--space-2) var(--space-3);
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+}
+.sg-option:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.sg-option:active:not(:disabled) { transform: translateY(1px); }
+.sg-option:disabled { cursor: default; opacity: 0.85; }
+.sg-option.is-correct { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); font-weight: 600; }
+.sg-option.is-wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); text-decoration: line-through; opacity: 0.7; }
+.sg-feedback { margin: var(--space-2) 0 0; font-family: var(--font-ui); font-size: var(--step--1); }
+.sg-feedback.ok { color: var(--ok); }
+.sg-feedback.bad { color: var(--bad); }
+.quiz-score { font-family: var(--font-mono); color: var(--accent); font-weight: 600; }
+
+footer { margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--line); color: var(--ink-soft); font-size: var(--step--1); font-family: var(--font-ui); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ============================================================
+   Book layout: left TOC + horizontal page-turn (lesson-book.js)
+   One section = one page; flip left/right instead of long scroll.
+   ============================================================ */
+main.book {
+  max-width: none; margin: 0; padding: 0;
+  height: 100vh; height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(210px, 270px) minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "toc pages" "toc pager";
+  overflow: hidden;
+}
+
+/* table of contents */
+.toc { grid-area: toc; overflow-y: auto; background: var(--surface); border-right: 1px solid var(--line); padding: var(--space-3) var(--space-2); }
+.toc .toc-title { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin: 0 var(--space-1) var(--space-2); }
+.toc ol { list-style: none; counter-reset: toc; margin: 0; padding: 0; }
+.toc li { counter-increment: toc; }
+.toc li button {
+  display: flex; gap: var(--space-2); align-items: baseline;
+  width: 100%; text-align: left; min-height: 40px;
+  padding: var(--space-1) var(--space-2); margin-bottom: 2px;
+  background: none; border: 0; border-left: 3px solid transparent; border-radius: 0 8px 8px 0;
+  color: var(--ink-soft); font-family: var(--font-ui); font-size: var(--step--1); cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.toc li button::before { content: counter(toc, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.75em; opacity: 0.6; }
+.toc li button:hover { background: var(--surface-2); color: var(--ink); }
+.toc li button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+
+/* paged content viewport */
+.pages { grid-area: pages; position: relative; overflow: hidden; min-width: 0; }
+.pages-track { display: flex; height: 100%; transition: transform 0.42s cubic-bezier(0.22, 0.7, 0.2, 1); will-change: transform; }
+/* width/flex pinned in px by lesson-book.js so the offset never depends on % resolution */
+/* each page is a slide: center its content block vertically when it fits; auto margins collapse to 0
+   on overflow, so a long page falls back to top-aligned and scrolls normally */
+.pages-track > section { flex: 0 0 auto; height: 100%; overflow-y: auto; display: flex; flex-direction: column; padding: var(--space-5) var(--space-4); }
+.page-inner { width: 100%; max-width: var(--measure); margin: auto; }
+.page-inner > :first-child { margin-top: 0; }
+
+/* pager bar */
+.pager { grid-area: pager; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--surface); border-top: 1px solid var(--line); }
+.pager button { min-height: 44px; min-width: 44px; padding: var(--space-1) var(--space-3); font-family: var(--font-ui); font-weight: 600; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; }
+.pager button:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.pager button:disabled { opacity: 0.4; cursor: default; }
+.pager .indicator { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-soft); }
+.pager .progress { flex: 1; height: 4px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin: 0 var(--space-2); }
+.pager .progress > span { display: block; height: 100%; background: var(--accent); transition: width 0.42s ease; }
+
+/* narrow screens: TOC becomes a top strip */
+@media (max-width: 720px) {
+  main.book { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; grid-template-areas: "toc" "pages" "pager"; }
+  .toc { border-right: 0; border-bottom: 1px solid var(--line); max-height: 22vh; }
+  .toc ol { display: flex; gap: var(--space-1); overflow-x: auto; }
+  .toc li button { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; border-radius: 8px; }
+  .toc li button[aria-current="true"] { border-left-color: transparent; border-bottom-color: var(--accent); }
+  .pages-track > section { padding: var(--space-4) var(--space-3); }
+}

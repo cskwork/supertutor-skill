@@ -1,0 +1,29 @@
+{
+  "topic": "deliberately-broken",
+  "concepts": [
+    {
+      "id": "entropy",
+      "definition": "Entropy is the entropy of a system.",
+      "jargonTerms": ["microstates"],
+      "workedExample": { "type": "analogy", "content": "It is like a messy room." },
+      "restatementPrompt": "",
+      "factual": true
+    },
+    {
+      "id": "styled-concept",
+      "definition": "A plain enough definition with sufficient ordinary words to clear the length floor here.",
+      "jargonTerms": [],
+      "workedExample": { "type": "worked", "content": "A concrete solved instance that is distinct from the definition sentence above." },
+      "restatementPrompt": "Restate it in your own words.",
+      "factual": false,
+      "modality": { "contentStructure": "vibes" },
+      "note": "We taught it this way because you are a visual learner."
+    }
+  ],
+  "gradings": [
+    { "conceptId": "entropy", "gapType": "mystery", "followUpQuestion": "What is heat? What is disorder? What is temperature?" }
+  ],
+  "turns": [
+    { "index": 0, "stuckPoint": "x", "hintLevel": 3, "recoveryPrompt": "" }
+  ]
+}

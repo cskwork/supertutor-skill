@@ -1,0 +1,13 @@
+{
+  "topic": "deliberately-broken",
+  "bloomLevel": "Genius",
+  "dreyfusStage": "wizard",
+  "masteredConcepts": [
+    {
+      "id": "entropy",
+      "mastered": true,
+      "representationId": "r1",
+      "novelTransfers": [{ "passed": true, "unprompted": true }]
+    }
+  ]
+}

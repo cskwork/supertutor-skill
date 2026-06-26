@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>/supertutor - teach to mastery, never vague</title>
+<meta name="description" content="A Claude Code skill that teaches anyone anything to genuine mastery - first-principles engineering as the flagship - via Feynman explain-back and Socratic hints, behind a deterministic gate the tutor cannot self-approve. English and Korean.">
+<meta property="og:title" content="/supertutor - teach to mastery, never vague">
+<meta property="og:description" content="Never-vague teaching: a jargon-free definition, a concrete worked example, and a graded own-words restatement on every turn. Behind a gate with no self-approval.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f0b429'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-style='italic' font-size='20' font-weight='600' text-anchor='middle' fill='%230a0b0d'%3Et%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0a0b0d; --glass:rgba(20,22,27,.58); --glass-strong:rgba(20,22,27,.78);
+    --ink:#f5f4f0; --body:#d9d8d2; --muted:#aba89f; --soft:#8a877e;
+    --line:rgba(245,244,240,.10); --line-strong:rgba(245,244,240,.18);
+    --accent:#f0b429; --accent-deep:#c8902a; --accent-soft:rgba(240,180,41,.13);
+    --accent-ink:#0e0f11;
+    --green:#9fd68b; --green-deep:#7bbf6a; --green-soft:rgba(123,191,106,.13);
+    --red:#f0a39b; --red-soft:rgba(240,163,155,.12);
+    --cyan:#7cc4d6; --violet:#b6a7e0;
+    --hl:rgba(245,244,240,.16); --hl-soft:rgba(245,244,240,.06);
+    --shadow:0 16px 48px rgba(6,7,9,.5);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --r-card:18px; --r-term:14px;
+    --maxw:1180px; --fs:1;
+    --sans:ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --serif:"Newsreader", Georgia, "Times New Roman", serif;
+    --mono:ui-monospace, "SF Mono", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; background:var(--bg)}
+  body{
+    margin:0; min-width:320px; background:var(--bg); color:var(--body);
+    font-family:var(--sans); font-size:calc(16px * var(--fs)); line-height:1.6;
+    -webkit-font-smoothing:antialiased; padding-bottom:104px; overflow-x:hidden;
+  }
+
+  /* Language: .en / .ko spans toggled by html[lang]; default en. */
+  html[lang="en"] .ko{ display:none !important; }
+  html[lang="ko"] .en{ display:none !important; }
+  html[lang="ko"] body{ word-break:keep-all; }
+  html[lang="ko"] .term pre, html[lang="ko"] .ticker, html[lang="ko"] .ascii{ word-break:normal; }
+
+  a{color:inherit; text-decoration:none}
+  a:hover{color:var(--accent)}
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px }
+  code, kbd, pre, .mono{ font-family:var(--mono) }
+  b{color:var(--ink)}
+  .wrap{ position:relative; z-index:2; width:min(var(--maxw), calc(100% - 40px)); margin:0 auto }
+  .accent{color:var(--accent)}
+  .serif{
+    font-family:var(--serif); font-style:italic; font-weight:500;
+    background:linear-gradient(115deg,#f6d27a 6%,var(--accent) 48%,var(--accent-deep) 95%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; padding-right:.04em;
+  }
+  html[lang="ko"] .serif{ font-style:normal; font-weight:700; padding-right:0 }
+  .eyebrow{ font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:600 }
+  .eyebrow::before{ content:""; display:inline-block; width:18px; height:1px; background:var(--accent); vertical-align:middle; margin-right:10px; opacity:.7 }
+
+  /* Depth layers: aurora z-3, grain z90. */
+  body::before{
+    content:""; position:fixed; inset:-12%; z-index:-3; pointer-events:none;
+    background:
+      radial-gradient(38% 46% at 14% 8%, rgba(240,180,41,.16), transparent 70%),
+      radial-gradient(44% 44% at 86% 12%, rgba(124,196,214,.14), transparent 70%),
+      radial-gradient(50% 50% at 80% 86%, rgba(182,167,224,.12), transparent 72%),
+      radial-gradient(42% 42% at 16% 92%, rgba(123,191,106,.10), transparent 72%);
+    filter:saturate(118%); animation:aurora 30s ease-in-out infinite;
+  }
+  @keyframes aurora{ 0%,100%{transform:translate3d(0,0,0) scale(1)} 50%{transform:translate3d(-1.4%,1.1%,0) scale(1.05)} }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:90; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" stitchTiles="stitch"/></filter><rect width="160" height="160" filter="url(%23n)" opacity="0.55"/></svg>');
+  }
+
+  .glass{
+    background:var(--glass);
+    -webkit-backdrop-filter:blur(22px) saturate(150%); backdrop-filter:blur(22px) saturate(150%);
+    border:1px solid var(--line);
+    box-shadow:inset 0 1px 0 var(--hl), inset 0 -1px 0 rgba(6,7,9,.4), var(--shadow);
+  }
+  @media (prefers-reduced-transparency:reduce){
+    .glass{ background:rgba(22,24,28,.97); -webkit-backdrop-filter:none; backdrop-filter:none }
+  }
+
+  /* Glass topbar */
+  .topbar{ position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:60; width:min(var(--maxw), calc(100% - 32px)); border-radius:16px }
+  .top-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 14px 10px 18px }
+  .brand{ font-weight:700; color:var(--ink); font-size:1.06rem; letter-spacing:-.01em }
+  .brand b{ color:var(--accent) }
+  .top-right{ display:flex; gap:9px; align-items:center }
+  .pill{ border:1px solid var(--line); padding:9px 15px; border-radius:999px; color:var(--ink); font-size:.86rem; background:var(--hl-soft); transition:border-color .2s var(--ease), transform .2s var(--ease) }
+  .pill:hover{ border-color:rgba(240,180,41,.55); transform:translateY(-1px); color:var(--ink) }
+  .lang{ cursor:pointer; font-family:inherit; min-width:78px; text-align:center }
+
+  /* Fixed glass dock with hover magnification */
+  .dock{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:60; display:flex; gap:4px; padding:6px; border-radius:999px; max-width:calc(100% - 24px) }
+  .dock a{ position:relative; padding:11px 17px; border-radius:999px; color:var(--muted); font-size:.9rem; font-weight:500; white-space:nowrap; transition:color .25s var(--ease), transform .3s var(--ease) }
+  .dock a:hover{ color:var(--ink); transform:translateY(-3px) scale(1.07) }
+  .dock a:has(+ a:hover), .dock a:hover + a{ transform:translateY(-1px) scale(1.03) }
+  .dock a.active{ color:var(--accent-ink); background:var(--accent); box-shadow:inset 0 1px 0 rgba(255,247,224,.45), 0 6px 18px rgba(240,180,41,.32) }
+  @media (max-width:620px){ .dock a{ padding:10px 12px; font-size:.82rem } .dock{ gap:2px; padding:5px } }
+
+  /* Hero */
+  .hero{ padding:146px 0 40px; display:grid; grid-template-columns:1.06fr .94fr; gap:54px; align-items:center; min-height:86dvh }
+  .hero h1{ font-size:clamp(2.5rem,5.6vw,4.4rem); line-height:1.04; letter-spacing:-.035em; color:var(--ink); margin:.6rem 0 0; font-weight:700; text-wrap:balance }
+  .hero h1 .slash{ color:var(--soft) }
+  .hero p.lede{ font-size:1.14rem; color:var(--body); max-width:42ch; margin:1.2rem 0 0 }
+  [data-stage]{ opacity:0; transform:translateY(18px); animation:rise .85s var(--ease) forwards; animation-delay:calc(var(--i,0) * 110ms) }
+  @keyframes rise{ to{ opacity:1; transform:none } }
+  .cta-row{ display:flex; gap:12px; margin-top:30px; flex-wrap:wrap }
+  .btn{ position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:12px 20px; border-radius:13px; font-weight:600; font-size:.95rem; transition:transform .25s var(--ease), box-shadow .25s var(--ease), border-color .2s var(--ease) }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); box-shadow:inset 0 1px 0 rgba(255,247,224,.45), 0 8px 24px rgba(240,180,41,.28) }
+  .btn-primary::after{ content:""; position:absolute; top:0; bottom:0; left:-60%; width:40%; transform:skewX(-18deg); background:linear-gradient(90deg, transparent, rgba(255,247,224,.5), transparent); transition:left .55s var(--ease) }
+  .btn-primary:hover{ transform:translateY(-2px); color:var(--accent-ink) }
+  .btn-primary:hover::after{ left:120% }
+  .btn-ghost{ color:var(--ink); border:1px solid var(--line); background:var(--hl-soft) }
+  .btn-ghost:hover{ transform:translateY(-2px); border-color:rgba(240,180,41,.5) }
+  .cta-note{ margin:14px 0 0; font-size:.84rem; color:var(--muted) }
+  .cta-note b{ color:var(--body); font-weight:600 }
+
+  /* Stat grid */
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin:28px 0 0; border-top:1px solid var(--line) }
+  .stat{ padding:22px 8px 0; border-left:1px solid var(--line) }
+  .stat:first-child{ border-left:none; padding-left:0 }
+  .stat:not(:first-child){ padding-left:20px }
+  .stat .n{ font-family:var(--serif); font-style:italic; font-weight:500; font-size:2.2rem; color:var(--ink); line-height:1 }
+  .stat .n em{ font-style:inherit; color:var(--accent) }
+  .stat p{ margin:.45rem 0 0; font-size:.83rem; color:var(--muted); letter-spacing:.01em }
+  @media (max-width:820px){ .stats{ grid-template-columns:1fr 1fr; row-gap:22px } .stat:nth-child(3){ border-left:none; padding-left:0 } }
+
+  /* Terminal */
+  .term{ border-radius:var(--r-term); overflow:hidden }
+  .term-bar{ display:flex; align-items:center; gap:8px; padding:11px 15px; border-bottom:1px solid var(--line) }
+  .dot{ width:11px; height:11px; border-radius:50% }
+  .dot.a{ background:#e0685f } .dot.b{ background:var(--accent) } .dot.c{ background:var(--green-deep) }
+  .term-title{ margin-left:8px; font-size:.8rem; color:var(--muted); font-family:var(--mono) }
+  .term pre{ margin:0; padding:18px; font-family:var(--mono); font-size:calc(.82rem * var(--fs)); line-height:1.75; color:var(--body); overflow-x:auto; white-space:pre-wrap }
+  .term .ok{ color:var(--green) } .term .bad{ color:var(--red) } .term .dim{ color:var(--soft) } .term .cy{ color:var(--cyan) } .term .am{ color:var(--accent) }
+  .tline{ display:block; opacity:0; animation:lineIn .01s steps(1) forwards; animation-delay:var(--t,0s) }
+  @keyframes lineIn{ to{ opacity:1 } }
+  .caret::after{ content:""; display:inline-block; width:.55em; height:1.05em; margin-left:2px; vertical-align:text-bottom; background:var(--accent); animation:blink 1.1s steps(1) infinite }
+  @keyframes blink{ 50%{ opacity:0 } }
+
+  /* Ticker */
+  .ticker-wrap{ position:relative; z-index:2; border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; background:rgba(14,16,20,.6) }
+  .ticker{ display:flex; gap:0; width:max-content; animation:tick 34s linear infinite }
+  .ticker-wrap:hover .ticker{ animation-play-state:paused }
+  @keyframes tick{ to{ transform:translateX(-50%) } }
+  .ticker span{ display:inline-flex; align-items:center; min-height:46px; padding:0 24px; color:var(--muted); font:700 .76rem/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
+  .ticker b{ color:var(--accent) }
+
+  /* Sections */
+  section{ padding:clamp(58px,8vw,92px) 0; position:relative; z-index:2 }
+  section[id]{ scroll-margin-top:92px }
+  .sec-head{ max-width:60ch }
+  .sec-head h2{ font-size:clamp(1.8rem,3.5vw,2.6rem); color:var(--ink); letter-spacing:-.025em; margin:.5rem 0 0; font-weight:700; text-wrap:balance }
+  .sec-head p{ color:var(--muted); margin:.8rem 0 0; font-size:calc(1rem * var(--fs)) }
+
+  /* Why metrics */
+  .metrics{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:38px }
+  .metric{ padding:24px 20px; border-radius:var(--r-card) }
+  .metric .big{ font-family:var(--serif); font-style:italic; font-weight:500; font-size:2.6rem; line-height:1; background:linear-gradient(120deg,#f6d27a,var(--accent) 55%,var(--accent-deep)); -webkit-background-clip:text; background-clip:text; color:transparent }
+  html[lang="ko"] .metric .big{ font-style:normal; font-weight:700 }
+  .metric h3{ margin:.7rem 0 .3rem; color:var(--ink); font-size:1rem; letter-spacing:-.01em }
+  .metric p{ margin:0; color:var(--muted); font-size:.88rem }
+  @media (max-width:860px){ .metrics{ grid-template-columns:1fr 1fr } }
+
+  /* Workflow split */
+  .split{ display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.7fr); gap:clamp(22px,4vw,42px); align-items:stretch; margin-top:38px }
+  .claim-stack{ display:grid; gap:12px }
+  .claim{ padding:22px; border-radius:var(--r-card) }
+  .claim h3{ margin:0 0 7px; color:var(--ink); font-size:1.08rem; letter-spacing:-.01em }
+  .claim p{ margin:0; color:var(--muted); font-size:.93rem }
+  .route{ position:relative; padding:22px; border-radius:var(--r-card); overflow:hidden }
+  .route h4{ margin:0 0 14px; font:600 .72rem/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--accent) }
+  .route-step{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin:0 0 8px; padding:11px 13px; border:1px solid var(--line); border-radius:10px; background:rgba(10,11,13,.5); color:var(--muted); font:600 .78rem/1.2 var(--mono) }
+  .route-step b{ color:var(--ink) }
+  .route-step .who{ font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--soft) }
+  .route-step.critic{ border-color:rgba(240,180,41,.4) } .route-step.critic b{ color:var(--accent) } .route-step.critic .who{ color:var(--accent) }
+  .route-step.research{ border-color:rgba(124,196,214,.4) } .route-step.research .who{ color:var(--cyan) }
+
+  /* Bento */
+  .bento{ display:grid; grid-template-columns:repeat(6,1fr); gap:14px; margin-top:38px }
+  .card{ position:relative; overflow:hidden; border-radius:var(--r-card); padding:24px 22px; transition:border-color .3s var(--ease), transform .3s var(--ease) }
+  .card .tag{ font:600 .7rem/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; color:var(--accent) }
+  .card.flag .tag{ color:var(--accent) }
+  .card h3{ margin:.55rem 0 0; color:var(--ink); font-size:1.1rem; letter-spacing:-.01em; position:relative }
+  .card p{ margin:.5rem 0 0; font-size:.92rem; color:var(--muted); position:relative; max-width:52ch }
+  .card .pipe{ margin-top:14px; font:.74rem/1.5 var(--mono); color:var(--soft) }
+  .card .pipe b{ color:var(--accent); font-weight:600 }
+  .card .gnum{ position:absolute; right:16px; top:6px; font-family:var(--serif); font-style:italic; font-size:3.4rem; line-height:1; color:rgba(245,244,240,.06); user-select:none; pointer-events:none }
+  .card::after{ content:""; position:absolute; inset:0; border-radius:inherit; opacity:0; pointer-events:none; transition:opacity .35s var(--ease); background:radial-gradient(240px circle at var(--mx,50%) var(--my,40%), rgba(240,180,41,.12), transparent 65%) }
+  .card:hover{ border-color:rgba(240,180,41,.35); transform:translateY(-2px) }
+  .card:hover::after{ opacity:1 }
+  .card.flag{ border-color:rgba(240,180,41,.3) }
+  .card.flag::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--accent),transparent) }
+  .card.s6{ grid-column:span 6 } .card.s4{ grid-column:span 4 } .card.s3{ grid-column:span 3 } .card.s2{ grid-column:span 2 }
+  @media (max-width:900px){ .bento{ grid-template-columns:1fr 1fr } .card.s6,.card.s4,.card.s3,.card.s2{ grid-column:span 1 } }
+  @media (max-width:560px){ .bento{ grid-template-columns:1fr } }
+
+  /* Loop */
+  .loop{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:38px }
+  .step{ position:relative; border-radius:var(--r-term); padding:22px 18px }
+  .step .n{ font-family:var(--serif); font-style:italic; font-size:1.7rem; color:var(--accent); line-height:1 }
+  .step h3{ margin:.4rem 0 0; color:var(--ink); font-size:1rem }
+  .step p{ margin:.35rem 0 0; font-size:.86rem; color:var(--muted) }
+  .role{ position:absolute; top:18px; right:16px; font:.6rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--soft); border:1px solid var(--line); border-radius:999px; padding:4px 8px }
+  .role.critic{ color:var(--accent); border-color:rgba(240,180,41,.4) }
+  .role.research{ color:var(--cyan); border-color:rgba(124,196,214,.4) }
+  @media (max-width:900px){ .loop{ grid-template-columns:1fr 1fr } }
+  @media (max-width:520px){ .loop{ grid-template-columns:1fr } }
+
+  /* Gate */
+  .gate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; margin-top:38px }
+  .gate-list{ list-style:none; padding:6px 4px; margin:0; border-radius:var(--r-term) }
+  .gate-list li{ padding:14px 18px; border-bottom:1px solid var(--line); color:var(--body); font-size:.94rem; display:flex; gap:13px; align-items:baseline }
+  .gate-list li:last-child{ border-bottom:none }
+  .gate-list li .no{ display:inline-grid; place-items:center; flex:0 0 auto; width:24px; height:24px; border-radius:6px; border:1px solid rgba(240,180,41,.4); background:var(--accent-soft); color:var(--accent); font:700 .72rem/1 var(--mono) }
+  .gate-list li .k{ color:var(--accent); font-weight:600; white-space:nowrap; font-size:.9rem }
+  .gate-list li .d{ color:var(--muted); display:block; font-size:.85rem; margin-top:2px }
+  @media (max-width:860px){ .gate-grid{ grid-template-columns:1fr } }
+
+  /* Vault */
+  .vault{ display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.78fr); gap:24px; margin-top:38px; align-items:stretch }
+  .files{ display:grid; gap:10px }
+  .file-chip{ padding:15px 18px; border-radius:12px }
+  .file-chip code{ display:block; margin-bottom:5px; color:var(--cyan); font-size:.86rem }
+  .file-chip span{ color:var(--muted); font-size:.86rem }
+  .ascii{ margin:0; padding:20px; border-radius:var(--r-term); color:#dbe3da; font:calc(.8rem * var(--fs))/1.65 var(--mono); white-space:pre; overflow-x:auto }
+  .ascii .c{ color:var(--cyan) } .ascii .a{ color:var(--accent) } .ascii .dim{ color:var(--soft) }
+
+  /* Proof */
+  .proof-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:38px }
+  .proof{ padding:24px 22px; border-radius:var(--r-card) }
+  .proof .tag{ display:inline-flex; padding:6px 9px; border-radius:6px; background:var(--accent-soft); color:var(--accent); font:600 .68rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px }
+  .proof.fp .tag{ background:var(--accent-soft); color:var(--accent) }
+  .proof.fy .tag{ background:var(--green-soft); color:var(--green) }
+  .proof.so .tag{ background:rgba(182,167,224,.14); color:var(--violet) }
+  .proof h3{ margin:0 0 8px; color:var(--ink); font-size:1.04rem }
+  .proof p{ margin:0; color:var(--muted); font-size:.9rem }
+  .proof .ex{ margin-top:12px; padding:12px 13px; border-radius:9px; border:1px solid var(--line); background:rgba(10,11,13,.5); color:var(--body); font:.8rem/1.55 var(--mono) }
+  .proof .ex .q{ color:var(--accent) }
+  @media (max-width:860px){ .proof-grid{ grid-template-columns:1fr } }
+
+  /* Install */
+  .install{ display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.55fr); gap:20px; align-items:stretch; margin-top:38px }
+  .install-card{ padding:24px; border-radius:var(--r-card) }
+  .install-card h3{ margin:0 0 10px; color:var(--ink); font-size:1.18rem; letter-spacing:-.01em }
+  .install-card p{ margin:0 0 16px; color:var(--muted); font-size:.92rem }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px }
+  .tag-pill{ border:1px solid var(--line); border-radius:999px; padding:7px 12px; color:var(--muted); background:var(--hl-soft); font:600 .76rem/1 var(--mono) }
+  @media (max-width:860px){ .install{ grid-template-columns:1fr } }
+
+  footer{ margin-top:8px; padding:42px 0 18px; color:var(--muted); font-size:.9rem; position:relative; z-index:2; border-top:1px solid var(--line) }
+  .foot-row{ display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; align-items:center }
+  .foot-row b{ color:var(--accent) }
+  .foot-note{ margin-top:14px; font-size:.83rem; color:var(--soft); max-width:62ch }
+  footer a:hover{ color:var(--ink) }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .7s var(--ease), transform .7s var(--ease); transition-delay:var(--d,0s) }
+  .reveal.in{ opacity:1; transform:none }
+
+  @media (max-width:900px){
+    .hero{ grid-template-columns:1fr; gap:34px; min-height:0; padding-top:124px }
+    .hero p.lede{ max-width:58ch }
+    .split{ grid-template-columns:1fr }
+    .vault{ grid-template-columns:1fr }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto }
+    *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important }
+    .reveal{ opacity:1; transform:none }
+    [data-stage]{ opacity:1; transform:none; animation:none }
+    .tline{ opacity:1; animation:none } .caret::after{ animation:none }
+    .ticker{ animation:none; flex-wrap:wrap; width:auto }
+    body::before{ animation:none }
+    .btn-primary::after{ display:none }
+    .btn:hover,.pill:hover,.card:hover,.dock a:hover{ transform:none }
+    ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){ animation:none !important }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar glass">
+  <div class="top-row">
+    <div class="brand">super<b>tutor</b></div>
+    <div class="top-right">
+      <button id="langToggle" class="pill lang" aria-label="Switch language / 언어 전환"><span class="en">한국어</span><span class="ko">EN</span></button>
+      <a class="pill" href="https://github.com/cskwork/supertutor-skill">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<nav class="dock glass" aria-label="Sections">
+  <a href="#why" class="dock-link"><span class="en">Why</span><span class="ko">이유</span></a>
+  <a href="#modes" class="dock-link"><span class="en">Modes</span><span class="ko">모드</span></a>
+  <a href="#loop" class="dock-link"><span class="en">Loop</span><span class="ko">루프</span></a>
+  <a href="#gate" class="dock-link"><span class="en">Gate</span><span class="ko">게이트</span></a>
+  <a href="#install" class="dock-link"><span class="en">Install</span><span class="ko">설치</span></a>
+</nav>
+
+<main>
+<section class="hero wrap" id="top">
+  <div>
+    <span class="eyebrow" data-stage style="--i:0"><span class="en">Claude Code teaching skill</span><span class="ko">Claude Code 학습 스킬</span></span>
+    <h1 data-stage style="--i:1">
+      <span class="en"><span class="slash">/</span>supertutor teaches to <span class="serif">mastery</span>, never <span class="serif">vague</span>.</span>
+      <span class="ko"><span class="slash">/</span>supertutor, 진짜 <span class="serif">이해</span>까지. 절대 <span class="serif">모호하지 않게</span>.</span>
+    </h1>
+    <p class="lede" data-stage style="--i:2">
+      <span class="en">Understanding is what you can rebuild from memory and say in your own words. Every turn ships a jargon-free definition, a concrete worked example, and a graded restatement - behind a gate the tutor cannot self-approve.</span>
+      <span class="ko">이해란 기억에서 다시 세우고 자기 말로 설명할 수 있는 것입니다. 모든 턴은 군더더기 없는 정의, 구체적인 풀이 예시, 채점된 되말하기를 함께 냅니다. 게이트는 가르친 쪽이 스스로 통과시키지 못합니다.</span>
+    </p>
+    <div class="cta-row" data-stage style="--i:3">
+      <a class="btn btn-primary" href="#install"><span class="en">Install the skill</span><span class="ko">스킬 설치하기</span></a>
+      <a class="btn btn-ghost" href="#gate"><span class="en">See the gate</span><span class="ko">게이트 살펴보기</span></a>
+    </div>
+    <p class="cta-note" data-stage style="--i:3">
+      <span class="en">Clone, symlink, then <b>/supertutor &lt;topic&gt;</b>. No build step, MIT.</span>
+      <span class="ko">클론하고 심링크한 뒤 <b>/supertutor &lt;주제&gt;</b>. 빌드 과정 없음, MIT.</span>
+    </p>
+    <div class="stats" data-stage style="--i:4">
+      <div class="stat"><div class="n">2<em>&sigma;</em></div><p><span class="en">tutoring + mastery &rarr; ~98th pct (Bloom 1984)</span><span class="ko">개인 교습 + 완전학습 &rarr; ~98 백분위 (Bloom 1984)</span></p></div>
+      <div class="stat"><div class="n">d=<em>.40</em></div><p><span class="en">generation effect: explain-back over re-reading</span><span class="ko">생성 효과: 다시 읽기보다 되말하기</span></p></div>
+      <div class="stat"><div class="n"><em>8</em></div><p><span class="en">intent-routed modes</span><span class="ko">의도로 나뉘는 모드</span></p></div>
+      <div class="stat"><div class="n"><em>6</em></div><p><span class="en">ordered gate sub-gates</span><span class="ko">순서대로 도는 서브게이트</span></p></div>
+    </div>
+  </div>
+
+  <div class="term glass" data-stage style="--i:2" aria-label="example lesson-gate.mjs output">
+    <div class="term-bar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="term-title">lesson-gate.mjs</span></div>
+<pre><span class="tline" style="--t:.4s"><span class="dim">$ node templates/lesson-gate.mjs .supertutor/beam-bending</span></span>
+<span class="tline" style="--t:.9s">== LESSON GATE: <span class="bad">FAIL</span> ==</span>
+<span class="tline" style="--t:1.15s">lesson-claims.json:14  <span class="bad">[never-vague]</span>   concept "bending-stress" has no workedExample</span>
+<span class="tline" style="--t:1.4s">lesson-claims.json:31  <span class="bad">[structure]</span>     restatement carries 2 follow-up questions; need 1</span>
+<span class="tline" style="--t:1.65s">ladder-state.json:8    <span class="bad">[hint-ladder]</span>   Level-3 bottom-out before a Level-2 attempt</span>
+<span class="tline" style="--t:2.05s"> </span>
+<span class="tline" style="--t:2.25s"><span class="dim"># add the worked example, split the question, re-run</span></span>
+<span class="tline" style="--t:2.7s">== LESSON GATE: <span class="ok">PASS</span> == <span class="dim">(6/6 sub-gates, exit 0)</span></span>
+<span class="tline caret" style="--t:3.1s"><span class="dim">mastery-certifiable: 2 novel transfers, unprompted</span></span></pre>
+  </div>
+</section>
+
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker">
+    <span><b>never vague</b></span><span>hints, not answers</span><span>back up on "I don't know"</span><span>grade the explanation, not the nod</span><span>mastery-gated advancement</span><span>never fabricate</span><span>tutor &ne; critic</span><span>content-driven modality</span>
+    <span><b>never vague</b></span><span>hints, not answers</span><span>back up on "I don't know"</span><span>grade the explanation, not the nod</span><span>mastery-gated advancement</span><span>never fabricate</span><span>tutor &ne; critic</span><span>content-driven modality</span>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">What it adds over a plain chatbot</span><span class="ko">일반 챗봇과 다른 점</span></span>
+      <h2><span class="en">It makes hidden gaps <span class="serif">visible</span> and <span class="serif">gated</span>.</span><span class="ko">숨은 빈틈을 <span class="serif">드러내고</span> <span class="serif">막아냅니다</span>.</span></h2>
+      <p><span class="en">A strong model that reads the material is the bar. /supertutor adds only what that bar cannot do alone: it grades the explanation instead of trusting a confident restatement. Every number traces to reference/sources.md.</span><span class="ko">자료를 읽는 좋은 모델이 기준선입니다. /supertutor는 그 기준선이 혼자 하지 못하는 것만 더합니다. 자신 있는 되말하기를 믿는 대신 설명 자체를 채점합니다. 모든 수치는 reference/sources.md로 추적됩니다.</span></p>
+    </div>
+    <div class="metrics">
+      <div class="metric glass reveal">
+        <div class="big">2&sigma;</div>
+        <h3><span class="en">Bloom 2-sigma</span><span class="ko">Bloom 2시그마</span></h3>
+        <p><span class="en">One-to-one tutoring plus mastery learning moved the average learner to roughly the 98th percentile (Bloom 1984).</span><span class="ko">개인 교습과 완전학습을 더하면 평균 학습자가 약 98 백분위로 올라갔습니다 (Bloom 1984).</span></p>
+      </div>
+      <div class="metric glass reveal" style="--d:.06s">
+        <div class="big">~50%</div>
+        <h3><span class="en">Testing effect</span><span class="ko">시험 효과</span></h3>
+        <p><span class="en">One-week delayed recall is about 50% better after retrieval than after restudy (Roediger &amp; Karpicke 2006).</span><span class="ko">검색 연습은 다시 공부하기보다 1주 뒤 회상이 약 50% 더 좋았습니다 (Roediger &amp; Karpicke 2006).</span></p>
+      </div>
+      <div class="metric glass reveal" style="--d:.12s">
+        <div class="big">d=.40</div>
+        <h3><span class="en">Generation effect</span><span class="ko">생성 효과</span></h3>
+        <p><span class="en">Information the learner generates is encoded far more durably than information re-read (Slamecka &amp; Graf 1978).</span><span class="ko">학습자가 스스로 만들어 낸 정보는 다시 읽은 정보보다 훨씬 오래 남습니다 (Slamecka &amp; Graf 1978).</span></p>
+      </div>
+      <div class="metric glass reveal" style="--d:.18s">
+        <div class="big">0</div>
+        <h3><span class="en">Learning-styles myth</span><span class="ko">학습 스타일 신화</span></h3>
+        <p><span class="en">Matching instruction to a learner's "style" has no adequate supporting evidence (Pashler 2008; Willingham 2005).</span><span class="ko">학습자의 "스타일"에 맞춘 교수법을 뒷받침할 충분한 근거는 없습니다 (Pashler 2008; Willingham 2005).</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workflow">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">Five things a chatbot will not do for free</span><span class="ko">챗봇이 거저 해 주지 않는 다섯 가지</span></span>
+      <h2><span class="en">Never-vague, graded, laddered, gated, sourced.</span><span class="ko">모호하지 않게, 채점하고, 단계로, 게이트로, 출처로.</span></h2>
+    </div>
+    <div class="split">
+      <div class="claim-stack">
+        <div class="claim glass reveal">
+          <h3><span class="en">The never-vague rule</span><span class="ko">절대 모호하지 않기 규칙</span></h3>
+          <p><span class="en">Every concept turn ships three things or it is incomplete: a plain-language definition with zero unexplained jargon, at least one concrete real worked example (a solved instance, not a hand-wavy analogy), and a prompt to restate it in your own words.</span><span class="ko">모든 개념 턴은 세 가지를 냅니다. 설명 안 된 전문용어가 없는 정의, 최소 하나의 구체적인 실제 풀이 예시(어설픈 비유가 아닌 풀린 사례), 그리고 자기 말로 되말하게 하는 질문입니다. 하나라도 빠지면 미완성입니다.</span></p>
+        </div>
+        <div class="claim glass reveal" style="--d:.06s">
+          <h3><span class="en">Grade the explanation, not the nod</span><span class="ko">고개 끄덕임이 아니라 설명을 채점</span></h3>
+          <p><span class="en">After every restatement the tutor names the first gap by a fixed 6-type rubric and returns exactly one Socratic question. Never a multi-question dump, never "does that make sense?".</span><span class="ko">되말할 때마다 6가지 빈틈 루브릭으로 첫 번째 빈틈을 짚고 소크라테스식 질문을 정확히 하나만 돌려줍니다. 질문을 한꺼번에 쏟지 않고, "이해되나요?"라고 묻지 않습니다.</span></p>
+        </div>
+        <div class="claim glass reveal" style="--d:.12s">
+          <h3><span class="en">Ladder hints, never the answer</span><span class="ko">답이 아니라 단계별 힌트</span></h3>
+          <p><span class="en">Point, then teach the principle after a genuine attempt, then bottom out only after that fails - then require "now explain why that is the answer." A real hint keeps the chance of just copying below one.</span><span class="ko">먼저 가리키고, 진짜 시도 뒤에 원리를 가르치고, 그게 실패할 때만 답을 줍니다. 답을 준 뒤에는 "왜 그것이 답인지 설명하기"를 요구합니다. 진짜 힌트는 그냥 베낄 확률을 1 미만으로 둡니다.</span></p>
+        </div>
+        <div class="claim glass reveal" style="--d:.18s">
+          <h3><span class="en">A gate it cannot self-approve</span><span class="ko">스스로 통과시킬 수 없는 게이트</span></h3>
+          <p><span class="en">The tutor never grades its own work. An independent pedagogy-critic runs a deterministic gate over the vault - never-vague, structure, hint-ladder, modality-not-style, mastery, integrity, in order. Any fail blocks "mastered".</span><span class="ko">튜터는 자기 작업을 채점하지 않습니다. 독립적인 페다고지 크리틱이 볼트에 결정적 게이트를 순서대로 돌립니다. 절대-모호금지, 구조, 힌트-사다리, 스타일아님, 숙달, 무결성. 하나라도 실패하면 "숙달"을 막습니다.</span></p>
+        </div>
+        <div class="claim glass reveal" style="--d:.24s">
+          <h3><span class="en">Never fabricate a fact</span><span class="ko">사실을 지어내지 않기</span></h3>
+          <p><span class="en">Every factual claim resolves to a real source URL in facts.json or it is cut. A missing tool or source becomes a documented placeholder, never an invented number, citation, or date.</span><span class="ko">모든 사실 주장은 facts.json의 실제 출처 URL로 연결되거나 삭제됩니다. 도구나 출처가 없으면 지어낸 수치·인용·날짜가 아니라 명시된 자리표시자로 둡니다.</span></p>
+        </div>
+      </div>
+      <div class="route glass reveal" style="--d:.08s" aria-label="role-separated loop">
+        <h4><span class="en">role-separated loop</span><span class="ko">역할 분리 루프</span></h4>
+        <div class="route-step"><b>01 Frame</b><span class="who en">tutor</span><span class="who ko">튜터</span></div>
+        <div class="route-step"><b>02 Diagnose</b><span class="who en">tutor</span><span class="who ko">튜터</span></div>
+        <div class="route-step research"><b>03 Research</b><span class="who en">researcher</span><span class="who ko">리서처</span></div>
+        <div class="route-step"><b>04 Teach</b><span class="who en">tutor</span><span class="who ko">튜터</span></div>
+        <div class="route-step"><b>05 Explain-back</b><span class="who en">tutor</span><span class="who ko">튜터</span></div>
+        <div class="route-step critic"><b>06 Critique + gate</b><span class="who en">pedagogy-critic</span><span class="who ko">검토자</span></div>
+        <div class="route-step"><b>07 Fix + re-run</b><span class="who en">tutor</span><span class="who ko">튜터</span></div>
+        <div class="route-step critic"><b>08 Advance / schedule</b><span class="who en">gated</span><span class="who ko">게이트 통과 후</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="modes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">One command, eight modes</span><span class="ko">명령 하나, 여덟 모드</span></span>
+      <h2><span class="en">The request picks the lane.</span><span class="ko">요청에 따라 경로가 정해집니다.</span></h2>
+      <p><span class="en">State the mode in one line before teaching. The root SKILL.md is a router; each mode loads only the reference it needs.</span><span class="ko">가르치기 전에 모드를 한 줄로 밝힙니다. 루트 SKILL.md는 라우터이고, 각 모드는 필요한 레퍼런스만 불러옵니다.</span></p>
+    </div>
+    <div class="bento">
+      <div class="card glass flag s4 reveal"><span class="gnum">01</span><span class="tag">First-principles &middot; flagship</span><h3><span class="en">Descend to bedrock, then rebuild</span><span class="ko">바닥까지 내려갔다가 다시 세우기</span></h3><p><span class="en">Ask "why? / what is it made of?" to a named physical law, classify physics-necessity vs inherited convention, reject labels (the Feynman test), then reconstruct from confirmed truths. Place the learner on the Bloom / Dreyfus ladder.</span><span class="ko">"왜? / 무엇으로 이루어졌나?"를 명명된 물리 법칙까지 묻고, 물리적 필연인지 물려받은 관습인지 가른 뒤, 라벨을 거부합니다(파인만 테스트). 그다음 확인된 진리만으로 다시 세웁니다. 학습자를 Bloom / Dreyfus 사다리에 놓습니다.</span></p><div class="pipe">why? &rarr; what is it made of? &rarr; <b>physics vs convention</b> &rarr; rebuild</div></div>
+      <div class="card glass s2 reveal" style="--d:.06s"><span class="gnum">02</span><span class="tag">Learn</span><h3><span class="en">Show-then-name</span><span class="ko">보여주고 이름 붙이기</span></h3><p><span class="en">Concrete worked example first, then the jargon-free definition, then a graded own-words restatement. One concept per turn.</span><span class="ko">구체적인 풀이 예시를 먼저, 그다음 군더더기 없는 정의, 그다음 채점되는 되말하기. 한 턴에 한 개념.</span></p></div>
+      <div class="card glass s3 reveal"><span class="gnum">03</span><span class="tag">Feynman-drill</span><h3><span class="en">Explain it to a smart 12-year-old</span><span class="ko">똘똘한 12살에게 설명하기</span></h3><p><span class="en">The learner explains with zero jargon; the tutor stops at the first undefined term, runs the 4-step protocol and the 6-type gap rubric, and returns one targeted question per gap over 2-3 passes.</span><span class="ko">학습자가 전문용어 없이 설명하면, 튜터는 정의 안 된 첫 용어에서 멈추고 4단계 프로토콜과 6가지 빈틈 루브릭을 돌려 빈틈마다 질문 하나씩, 2~3회 반복합니다.</span></p></div>
+      <div class="card glass s3 reveal" style="--d:.06s"><span class="gnum">04</span><span class="tag">Socratic-probe</span><h3><span class="en">Let the contradiction stand</span><span class="ko">모순이 드러나게 두기</span></h3><p><span class="en">Elenchus: restate the belief, build a concrete scenario that exposes the contradiction, and let the puzzlement (aporia) stand. Paul-Elder six question types, chosen where the reasoning is weakest. Never correct by telling.</span><span class="ko">엘렝코스: 믿음을 다시 말하고, 모순을 드러내는 구체적 상황을 만들고, 그 당혹감(아포리아)을 그대로 둡니다. 추론이 가장 약한 곳에서 Paul-Elder 여섯 질문 유형을 고릅니다. 말로 고쳐 주지 않습니다.</span></p></div>
+      <div class="card glass s2 reveal"><span class="gnum">05</span><span class="tag">Practice</span><h3><span class="en">Deliberate practice</span><span class="ko">의도적 연습</span></h3><p><span class="en">Isolate the highest-error subskill, give immediate binary feedback, hold the 40-70% difficulty band, then interleave.</span><span class="ko">오답이 가장 많은 하위 기술을 떼어내 즉시 맞다/틀리다 피드백을 주고, 40~70% 난이도 구간을 유지한 뒤 섞어 냅니다.</span></p></div>
+      <div class="card glass s2 reveal" style="--d:.06s"><span class="gnum">06</span><span class="tag">Represent</span><h3><span class="en">Modality by content</span><span class="ko">내용이 정하는 표현</span></h3><p><span class="en">Pick the representation the content needs - spatial to a diagram, causal to a cause-effect chain - not the learner's "style".</span><span class="ko">학습자의 "스타일"이 아니라 내용이 필요로 하는 표현을 고릅니다. 공간형은 다이어그램, 인과형은 원인-결과 사슬로.</span></p></div>
+      <div class="card glass s2 reveal" style="--d:.12s"><span class="gnum">07</span><span class="tag">Lesson-build</span><h3><span class="en">A reusable artifact</span><span class="ko">재사용 가능한 산출물</span></h3><p><span class="en">Author a lesson into the vault: Bloom objectives, key-terms pre-training, worked examples, spaced review. The critic gates it.</span><span class="ko">볼트에 레슨을 씁니다. Bloom 목표, 핵심 용어 사전학습, 풀이 예시, 분산 복습까지. 검토자가 게이트합니다.</span></p></div>
+      <div class="card glass s6 reveal"><span class="gnum">08</span><span class="tag">Mastery-check</span><h3><span class="en">The independent critic certifies, never the tutor</span><span class="ko">튜터가 아니라 독립 검토자가 인증합니다</span></h3><p><span class="en">The pedagogy-critic runs the deterministic interview gate: two novel-transfer items, the never-vague check, hint-ladder compliance, and no self-approval. Pass advances and schedules spaced review (1 day / 1 week / 1 month); fail re-teaches through a different representation. Tie-break: a stated wrong belief routes to Socratic-probe even if phrased "teach me."</span><span class="ko">검토자(pedagogy-critic)가 결정적 인터뷰 게이트를 돌립니다. 새로운 전이 문항 두 개, 절대 모호하지 않기 검사, 힌트 사다리 준수, 자기 승인 없음. 통과하면 진급하고 분산 복습을 잡습니다(1일 / 1주 / 1개월). 실패하면 다른 표현으로 다시 가르칩니다. 동률 규칙: "가르쳐 줘"라고 해도 잘못된 믿음이 명시되면 Socratic-probe로 보냅니다.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="loop">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">Role-separated, builder never grades itself</span><span class="ko">역할 분리, 만든 쪽이 채점하지 않음</span></span>
+      <h2><span class="en">The tutor teaches. An independent critic runs the gate.</span><span class="ko">튜터가 가르치고, 독립 검토자가 게이트를 돌립니다.</span></h2>
+      <p><span class="en">A researcher sources external facts only when a mode needs them. The work lives in a vault - .supertutor/&lt;topic&gt;/ - and no vault means no gate.</span><span class="ko">리서처는 모드가 필요로 할 때만 외부 사실을 출처와 함께 가져옵니다. 작업은 볼트(.supertutor/&lt;주제&gt;/)에 살고, 볼트가 없으면 게이트도 없습니다.</span></p>
+    </div>
+    <div class="loop">
+      <div class="step glass reveal"><span class="role"><span class="en">tutor</span><span class="ko">튜터</span></span><div class="n">1</div><h3><span class="en">Frame</span><span class="ko">분류</span></h3><p><span class="en">Classify into one mode in a single line; create or locate the vault.</span><span class="ko">한 줄로 한 모드로 분류하고, 볼트를 만들거나 찾습니다.</span></p></div>
+      <div class="step glass reveal" style="--d:.05s"><span class="role"><span class="en">tutor</span><span class="ko">튜터</span></span><div class="n">2</div><h3><span class="en">Diagnose</span><span class="ko">진단</span></h3><p><span class="en">Probe prior knowledge with low-stakes openers; record the highest level passed without hints. This sets the ZPD.</span><span class="ko">가벼운 질문으로 사전 지식을 떠보고, 힌트 없이 통과한 최고 수준을 기록합니다. 이것이 ZPD를 정합니다.</span></p></div>
+      <div class="step glass reveal" style="--d:.1s"><span class="role research"><span class="en">researcher</span><span class="ko">리서처</span></span><div class="n">3</div><h3><span class="en">Research</span><span class="ko">조사</span></h3><p><span class="en">Verify each fact or figure into facts.json with a source URL. Unverifiable becomes a marked placeholder. Skip for pure reasoning.</span><span class="ko">각 사실·수치를 출처 URL과 함께 facts.json에 검증합니다. 확인 불가는 표시된 자리표시자로. 순수 추론이면 생략.</span></p></div>
+      <div class="step glass reveal" style="--d:.15s"><span class="role"><span class="en">tutor</span><span class="ko">튜터</span></span><div class="n">4</div><h3><span class="en">Teach</span><span class="ko">교육</span></h3><p><span class="en">Deliver the turn in the mode's shape, then always prompt the learner to restate in their own words.</span><span class="ko">모드 형태에 맞춰 턴을 내고, 언제나 자기 말로 되말하도록 요청합니다.</span></p></div>
+      <div class="step glass reveal"><span class="role"><span class="en">tutor</span><span class="ko">튜터</span></span><div class="n">5</div><h3><span class="en">Explain-back + grade</span><span class="ko">되말하기 + 채점</span></h3><p><span class="en">Find the first gap by the 6-type rubric; return one Socratic question. On "I don't know," back up a level.</span><span class="ko">6가지 루브릭으로 첫 빈틈을 찾아 질문 하나를 냅니다. "모르겠어요"면 한 단계 내려갑니다.</span></p></div>
+      <div class="step glass reveal" style="--d:.05s"><span class="role critic"><span class="en">critic</span><span class="ko">검토자</span></span><div class="n">6</div><h3><span class="en">Critique + gate</span><span class="ko">검토 + 게이트</span></h3><p><span class="en">A fresh-context critic re-reads the vault and runs lesson-gate.mjs, logging every violation as file:line.</span><span class="ko">새 맥락의 검토자가 볼트를 다시 읽고 lesson-gate.mjs를 돌려 모든 위반을 file:line으로 남깁니다.</span></p></div>
+      <div class="step glass reveal" style="--d:.1s"><span class="role"><span class="en">tutor</span><span class="ko">튜터</span></span><div class="n">7</div><h3><span class="en">Fix + re-run</span><span class="ko">수정 + 재실행</span></h3><p><span class="en">Address each violation with the minimal change; re-run. Cap at 3 cycles, then report "needs human teacher review."</span><span class="ko">위반마다 최소 변경으로 고치고 다시 돌립니다. 3회까지, 그 뒤엔 "사람 교사 검토 필요"로 보고합니다.</span></p></div>
+      <div class="step glass reveal" style="--d:.15s"><span class="role critic"><span class="en">gated</span><span class="ko">게이트</span></span><div class="n">8</div><h3><span class="en">Advance / schedule</span><span class="ko">진급 / 일정</span></h3><p><span class="en">Only after the gate is green and two novel transfers pass unprompted: mark mastered, fade support, schedule 1 day / 1 week / 1 month.</span><span class="ko">게이트가 green이고 새 전이 두 개를 힌트 없이 통과한 뒤에만, 완료로 표시하고 지원을 줄이며 1일 / 1주 / 1개월로 잡습니다.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="gate">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">Deterministic, not eyeballed</span><span class="ko">눈대중이 아니라 결정적으로</span></span>
+      <h2><span class="en">Six sub-gates, run in order. Any FAIL is an overall FAIL.</span><span class="ko">여섯 서브게이트를 순서대로. 하나라도 FAIL이면 전체 FAIL.</span></h2>
+      <p><span class="en">node templates/lesson-gate.mjs .supertutor/&lt;topic&gt; reads the vault control files - it never guesses - and prints file:line violations verbatim. Exit 0 means mastery-certifiable. The tutor cannot run it on its own work.</span><span class="ko">node templates/lesson-gate.mjs .supertutor/&lt;주제&gt;는 볼트 제어 파일을 읽고 추측하지 않으며, file:line 위반을 그대로 출력합니다. 종료 코드 0은 숙달 인증 가능을 뜻합니다. 튜터는 자기 작업에 이걸 돌릴 수 없습니다.</span></p>
+    </div>
+    <div class="gate-grid">
+      <div class="reveal">
+        <ul class="gate-list glass">
+          <li><span class="no">1</span><span><span class="k">never-vague</span><span class="d"><span class="en">definition + concrete workedExample + restatementPrompt on every concept</span><span class="ko">모든 개념에 정의 + 구체적 workedExample + restatementPrompt</span></span></span></li>
+          <li><span class="no">2</span><span><span class="k">structure</span><span class="d"><span class="en">one gapType from the 6-type enum and exactly one follow-up question</span><span class="ko">6유형 enum의 gapType 하나와 후속 질문 정확히 하나</span></span></span></li>
+          <li><span class="no">3</span><span><span class="k">hint-ladder</span><span class="d"><span class="en">no Level-3 bottom-out before Level-1 and Level-2; "I don't know" drops a level</span><span class="ko">Level-1·2 없이 Level-3 금지, "모르겠어요"는 한 단계 하강</span></span></span></li>
+          <li><span class="no">4</span><span><span class="k">modality-not-style</span><span class="d"><span class="en">FAIL on learning-style language; modality needs a contentStructure justification</span><span class="ko">학습-스타일 표현이면 FAIL, 표현은 contentStructure 근거 필요</span></span></span></li>
+          <li><span class="no">5</span><span><span class="k">mastery</span><span class="d"><span class="en">mastered:true needs &ge;2 novel transfers passed and unprompted; re-teach differs</span><span class="ko">mastered:true는 새 전이 2개 통과·무힌트 필요, 재교육은 다른 표현</span></span></span></li>
+          <li><span class="no">6</span><span><span class="k">integrity</span><span class="d"><span class="en">every factual:true claim resolves to a facts.json source with a non-empty url</span><span class="ko">factual:true 주장은 모두 비어있지 않은 url의 facts.json 출처로 연결</span></span></span></li>
+        </ul>
+      </div>
+      <div class="term glass reveal" style="--d:.1s" aria-label="ordered gate output">
+        <div class="term-bar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="term-title">lesson-gate.mjs .supertutor/recursion</span></div>
+<pre><span class="dim">$ node templates/lesson-gate.mjs .supertutor/recursion</span>
+<span class="am">[1/6] never-vague</span> .................. <span class="ok">PASS</span>
+<span class="am">[2/6] structure</span> .................... <span class="ok">PASS</span>
+<span class="am">[3/6] hint-ladder</span> .................. <span class="ok">PASS</span>
+<span class="am">[4/6] modality-not-style</span> ......... <span class="ok">PASS</span>
+<span class="am">[5/6] mastery</span> ...................... <span class="ok">PASS</span>
+<span class="am">[6/6] integrity</span> .................... <span class="ok">PASS</span>
+<span class="dim">--------------------------------------</span>
+== LESSON GATE: <span class="ok">PASS</span> == <span class="dim">(exit 0)</span>
+</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vault">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">The vault contract</span><span class="ko">볼트 계약</span></span>
+      <h2><span class="en">One work dir per learner and topic.</span><span class="ko">학습자와 주제마다 작업 폴더 하나.</span></h2>
+      <p><span class="en">Three control files make the deterministic gate possible. New turns append; prior claims are never silently rewritten.</span><span class="ko">제어 파일 세 개가 결정적 게이트를 가능하게 합니다. 새 턴은 덧붙이고, 이전 주장은 조용히 다시 쓰지 않습니다.</span></p>
+    </div>
+    <div class="vault">
+      <div class="files">
+        <div class="file-chip glass reveal"><code>lesson-claims.json</code><span class="en">per turn: concept, definition, jargon terms, worked example, restatement prompt, grading</span><span class="ko">턴마다: 개념, 정의, 전문용어, 풀이 예시, 되말하기 질문, 채점</span></div>
+        <div class="file-chip glass reveal" style="--d:.06s"><code>facts.json</code><span class="en">sourced facts (claim, url, retrievedDate); may be an empty array</span><span class="ko">출처 있는 사실(claim, url, retrievedDate); 빈 배열일 수 있음</span></div>
+        <div class="file-chip glass reveal" style="--d:.12s"><code>ladder-state.json</code><span class="en">Bloom level, Dreyfus stage, per-subskill accuracy, mastered concepts, review schedule</span><span class="ko">Bloom 수준, Dreyfus 단계, 하위 기술별 정확도, 완료 개념, 복습 일정</span></div>
+      </div>
+<pre class="ascii glass reveal" style="--d:.06s"><span class="a">.supertutor/</span>&lt;topic&gt;/
+├─ <span class="c">lesson-claims.json</span>   <span class="dim">never-vague / structure / integrity</span>
+├─ <span class="c">facts.json</span>           <span class="dim">integrity (sourced or cut)</span>
+└─ <span class="c">ladder-state.json</span>    <span class="dim">mastery / hint-ladder</span>
+
+<span class="a">reference/</span>
+├─ pedagogy-core.md     <span class="dim">always-on authority</span>
+├─ first-principles.md  <span class="dim">flagship descent + rebuild</span>
+├─ feynman.md  socratic.md  modalities.md
+├─ mastery-ladder.md  cognitive-load.md
+└─ workspace.md  lessons.md  sources.md</pre>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">What a turn actually looks like</span><span class="ko">실제 한 턴의 모습</span></span>
+      <h2><span class="en">Three representative moves.</span><span class="ko">대표 동작 셋.</span></h2>
+    </div>
+    <div class="proof-grid">
+      <div class="proof glass fp reveal">
+        <span class="tag">First-principles</span>
+        <h3><span class="en">Descent to bedrock</span><span class="ko">바닥까지의 하강</span></h3>
+        <p><span class="en">Why does a beam sag? Keep asking "why? / what is it made of?" until a named law - not "because physics" - then rebuild.</span><span class="ko">왜 보가 처질까? "왜? / 무엇으로 되어 있나?"를 명명된 법칙까지 묻고("물리니까"는 안 됨), 다시 세웁니다.</span></p>
+        <div class="ex"><span class="q">Q</span> <span class="en">say why the top fibres compress, in your own words.</span><span class="ko">윗면 섬유가 왜 압축되는지 자기 말로 설명해 보세요.</span></div>
+      </div>
+      <div class="proof glass fy reveal" style="--d:.06s">
+        <span class="tag">Feynman gap-grading</span>
+        <h3><span class="en">Name the first gap</span><span class="ko">첫 빈틈 짚기</span></h3>
+        <p><span class="en">A restatement that uses "recursion calls itself" is circular. The rubric flags it and returns exactly one question.</span><span class="ko">"재귀는 자기를 부른다"는 되말하기는 순환 정의입니다. 루브릭이 짚고 질문 하나만 돌려줍니다.</span></p>
+        <div class="ex">gapType: <span class="q">circular</span><br><span class="en">explain it without using the word "recursion".</span><span class="ko">"재귀"라는 단어를 쓰지 말고 설명해 보세요.</span></div>
+      </div>
+      <div class="proof glass so reveal" style="--d:.12s">
+        <span class="tag">Socratic aporia</span>
+        <h3><span class="en">Let the puzzle stand</span><span class="ko">수수께끼를 그대로 두기</span></h3>
+        <p><span class="en">"A heavier object falls faster." Build the scenario that contradicts it - then let the puzzlement do the teaching.</span><span class="ko">"무거운 물체가 더 빨리 떨어진다." 이를 반박하는 상황을 만들고, 그 당혹감이 가르치게 둡니다.</span></p>
+        <div class="ex"><span class="q">Q</span> <span class="en">tie the two together - now what should fall, and how fast?</span><span class="ko">둘을 묶어 보세요. 이제 무엇이, 얼마나 빨리 떨어져야 할까요?</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="en">This repo is the skill</span><span class="ko">이 저장소가 곧 스킬</span></span>
+      <h2><span class="en">Clone, link, teach.</span><span class="ko">클론하고, 연결하고, 가르치기.</span></h2>
+    </div>
+    <div class="install">
+      <div class="term glass reveal">
+        <div class="term-bar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="term-title">shell</span></div>
+<pre><span class="dim"># clone the skill</span>
+git clone https://github.com/cskwork/supertutor-skill.git
+
+<span class="dim"># symlink it where your agent CLI finds skills</span>
+ln -s "$(pwd)/supertutor-skill" ~/.claude/skills/supertutor
+
+<span class="dim"># verify the gate and contract tests</span>
+bash tests/run-all.sh
+
+<span class="dim"># then, in your agent CLI</span>
+<span class="cy">/supertutor</span> teach me why a beam sags, from first principles</pre>
+      </div>
+      <div class="install-card glass reveal" style="--d:.08s">
+        <h3><span class="en">No extra service. Just the files.</span><span class="ko">추가 서비스 없음. 파일만.</span></h3>
+        <p><span class="en">The gate and tests use Node plus POSIX shell - run them under Git Bash or WSL on Windows. Hand one topic to /supertutor and it routes itself.</span><span class="ko">게이트와 테스트는 Node와 POSIX 셸을 씁니다. Windows에서는 Git Bash나 WSL로 돌리세요. /supertutor에 주제 하나를 맡기면 알아서 경로를 잡습니다.</span></p>
+        <div class="pill-row">
+          <span class="tag-pill">Agent CLI</span>
+          <span class="tag-pill">Node</span>
+          <span class="tag-pill">POSIX shell</span>
+          <span class="tag-pill">MIT</span>
+          <span class="tag-pill">EN / KO</span>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="foot-row">
+        <div>super<b>tutor</b> &middot; <span class="en">teach to mastery, never vague</span><span class="ko">진짜 이해까지, 절대 모호하지 않게</span> &middot; MIT</div>
+        <div style="display:flex; gap:20px">
+          <a href="https://github.com/cskwork/supertutor-skill">GitHub</a>
+          <a href="#top"><span class="en">Back to top</span><span class="ko">맨 위로</span></a>
+        </div>
+      </div>
+      <p class="foot-note">
+        <span class="en">Current year 2026. Every dated figure or external fact used in a live lesson is re-verified into the vault's facts.json, not pulled from model memory. Headline numbers trace to reference/sources.md.</span>
+        <span class="ko">현재 연도 2026. 실제 레슨에 쓰는 날짜·외부 사실은 모델 기억이 아니라 볼트의 facts.json에 다시 검증해 넣습니다. 대표 수치는 reference/sources.md로 추적됩니다.</span>
+      </p>
+    </footer>
+  </div>
+</section>
+</main>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var toggle = document.getElementById("langToggle");
+
+    function setLang(lang){
+      root.lang = (lang === "ko") ? "ko" : "en";
+      try { localStorage.setItem("supertutor-lang", root.lang); } catch (e) {}
+    }
+    var saved = null; try { saved = localStorage.getItem("supertutor-lang"); } catch (e) {}
+    var q = null; try { q = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+    var initial = (q === "en" || q === "ko") ? q
+      : (saved || ((navigator.language || "en").toLowerCase().indexOf("ko") === 0 ? "ko" : "en"));
+    setLang(initial);
+
+    if (toggle) toggle.addEventListener("click", function(){
+      var next = root.lang === "en" ? "ko" : "en";
+      var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // View Transitions API: cross-fade the language swap. Unsupported / reduced-motion fall through.
+      if (document.startViewTransition && !rm) { document.startViewTransition(function(){ setLang(next); }); }
+      else { setLang(next); }
+    });
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Reveal on enter: IntersectionObserver only, no scroll listener.
+    var els = document.querySelectorAll(".reveal");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach(function(e){ e.classList.add("in"); });
+    } else {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } });
+      }, { threshold: 0.12 });
+      els.forEach(function(e, i){ e.style.setProperty("--d", (Math.min(i % 4, 3) * 0.06) + "s"); io.observe(e); });
+    }
+
+    // Pointer spotlight on bento cards: CSS vars only.
+    if (!reduce && window.matchMedia && window.matchMedia("(hover:hover)").matches) {
+      document.querySelectorAll(".card").forEach(function(card){
+        card.addEventListener("pointermove", function(ev){
+          var r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+          card.style.setProperty("--my", (ev.clientY - r.top) + "px");
+        });
+      });
+    }
+
+    // Active dock pill via section observer (no scroll listener).
+    var links = {};
+    document.querySelectorAll(".dock-link").forEach(function(a){ links[a.getAttribute("href").slice(1)] = a; });
+    if ("IntersectionObserver" in window) {
+      var spy = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (en.isIntersecting){
+            Object.keys(links).forEach(function(k){ links[k].classList.toggle("active", k === en.target.id); });
+          }
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      ["why","modes","loop","gate","install"].forEach(function(id){ var s = document.getElementById(id); if (s) spy.observe(s); });
+    }
+  })();
+</script>
+</body>
+</html>
