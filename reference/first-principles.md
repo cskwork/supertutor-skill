@@ -1,5 +1,10 @@
 # first-principles.md - descend to bedrock, then rebuild
 
+Entry safeguard: apply SKILL.md and `pedagogy-core.md` before this protocol. These questions and
+practice hints assume taught knowledge or an explicit assessment request. Untaught/unknown content,
+"not learned" or "teach basics first" -> LEARN with direct theory and a complete example first. A missing
+foundation is taught directly, not withheld until hint attempts fail. Then resume the appropriate mode.
+
 Loaded in **FIRST-PRINCIPLES** mode (signals: "explain X from first principles", "break X down to
 fundamentals", "really understand how X works"; any engineering, physics, or systems concept). This is the
 flagship loop. It overlays `pedagogy-core.md`, never overrides it: still one concept per turn, still

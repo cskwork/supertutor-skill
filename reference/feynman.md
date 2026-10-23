@@ -1,5 +1,10 @@
 # feynman.md - FEYNMAN-DRILL: the explain-back engine
 
+Entry safeguard: apply SKILL.md and `pedagogy-core.md` before this protocol. These questions and
+practice hints assume taught knowledge or an explicit assessment request. Untaught/unknown content,
+"not learned" or "teach basics first" -> LEARN with direct theory and a complete example first. A missing
+foundation is taught directly, not withheld until hint attempts fail. Then resume the appropriate mode.
+
 Load this in **FEYNMAN-DRILL** mode (learner says "check my understanding", "let me explain it
 back", "am I getting this right", or offers their own explanation). It is also the grading engine the
 **LEARN** mode borrows for step 5 of the teach loop. The contract lives in `SKILL.md`; the always-on

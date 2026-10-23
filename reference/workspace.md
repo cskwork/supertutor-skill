@@ -24,12 +24,15 @@ section of the first.
   facts.json           # ARRAY: sourced external facts (may be []); placeholders marked
   ladder-state.json    # OBJECT: Bloom/Dreyfus placement + mastery + review schedule
   lessons/*.html       # optional: LESSON-BUILD artifacts, gated by the same script
-  material/*.html      # default-delivery live cards (one per concept turn); live artifacts, NOT gated
+  material/*.html      # optional supplemental live cards; NOT gated
   assets/              # copy of templates/teach/assets/ (shared lesson.css etc.); cards link ../assets/lesson.css
   gate-report.md       # critic output: each violation as file:locator + one fix (the critic writes this)
 ```
 
-Seed the vault by copying `templates/workspace/*.example.json` into the three filenames above. Vaults
+Seed `lesson-claims.json` as `{ "topic": "<actual-topic>", "concepts": [], "gradings": [], "turns": [] }`
+and `facts.json` as `[]`. Use `ladder-state.example.json` as the empty-state seed and set the actual
+topic. Other `*.example.json` files demonstrate content only: never copy sample achievements, learner
+answers, claims or sources into a new learner's history. Vaults
 are personal learning data and are git-ignored; only the `templates/` seed is committed (see
 `.gitignore`). Never commit a learner's claims, state, or facts.
 
@@ -37,27 +40,22 @@ Who writes what: the **tutor** writes `lesson-claims.json` and updates `ladder-s
 the **researcher** writes `facts.json` only when a mode needs external facts; the **pedagogy-critic**
 only reads - it never edits a claim, it writes violations back as `file:line`.
 
-## Live HTML cards (material/) - the default delivery
+## Delivery: conversation first, optional HTML cards
 
-By default each live concept turn delivers its explanation as a card, not as terminal prose. The tutor
-copies `templates/teach/assets/` into the vault's `assets/` once, then builds one
-`material/concept-NN.html` per turn from `material-card.html` (shared `lesson.css`, so every card matches
-the course). The card holds the never-vague pair the learner reads - the jargon-free `definition` (in a
-`<dfn>`/`.sg-def` anchor) and the concrete `workedExample` - while the **terminal** keeps everything the
-learner must act on: the one-line mode, the `restatementPrompt`, the one-gap grading, and the hint ladder.
-The card is the rendering; `lesson-claims.json` stays the record, written in full every turn exactly as
-before.
+`terminal-text` is the default for new vaults or absent delivery fields. Teach core theory, complete
+examples and execution/results directly in the conversation before the understanding question. A learner
+must not need to open a file to learn the material that a question tests.
 
-A card is a **live-turn artifact and is NOT gated**: `lesson-gate.mjs` scans `lessons/` (book artifacts)
-only, never `material/`, matching the rule that live turns skip the gate. So a card never needs the book
-scaffold (no TOC, no pager, no `.sg-quiz`) - questions live in the terminal, not the card. Set
-`ladder-state.json.delivery` to `"terminal-text"` when the learner opts out ("text only" / "터미널로");
-then skip the card and put the explanation in terminal prose.
+On request, supplement with `material/concept-NN.html` from `templates/teach/assets/material-card.html`;
+copy shared assets once into `assets/`. An existing explicit `html-card` preference remains valid,
+but the chat still includes the core explanation. Cards are live artifacts, not gated books: only
+`lessons/` uses the HTML book gate. `lesson-claims.json` records actual teaching regardless of delivery.
 
 ## lesson-claims.json
 
-A single OBJECT (not a bare array) with three top-level arrays. Each teaching turn appends one entry to
-`concepts`, one to `gradings`, and the hint trail to `turns`. Schema:
+A single OBJECT (not a bare array) with three top-level arrays. Append concepts only after teaching,
+`gradings` only after receiving an actual learner response, and `turns` for real teaching/practice
+interactions. Do not fabricate a grading for a prompt awaiting an answer. Schema:
 
 ```json
 {
@@ -149,13 +147,19 @@ A top-level array, the append-only hint trail. Each entry:
 
 - `index` - turn number.
 - `stuckPoint` - kebab-case label for what the learner is stuck on; hint levels are tracked per stuckPoint.
-- `hintLevel` - `1` (point), `2` (teach the principle), or `3` (bottom-out / give the answer).
+- `phase` - optional for legacy entries; `practice` for hint attempts, `teach` for direct explanation.
+  A `teach` event must name its `conceptId` pointing to an actual `concepts[]` entry and omit `hintLevel`.
+  Its definition/example evidence is still subject to the normal gates. Teaching a missing foundation
+  is not a Level-3 hint; it starts a new practice sequence for that `stuckPoint`.
+- `hintLevel` - for practice only: `1` (point), `2` (principle hint), or `3` (bottom-out answer).
 - `recoveryPrompt` - REQUIRED on every `hintLevel: 3`: the "now explain why that is the answer" prompt.
 - `learnerIDK` - `true` if the learner said "I don't know" this turn. The next turn for the SAME
-  `stuckPoint` must drop to a LOWER `hintLevel` (back up to a prerequisite), never repeat the level.
+  `stuckPoint` must simplify/back up to a LOWER `hintLevel` or switch to an evidenced `teach` event;
+  never repeat the same unknown question. Missing knowledge gets explanation, not more guessing.
 
 The hint-ladder sub-gate FAILs a `hintLevel: 3` that has no recorded `1` and `2` for the same `stuckPoint`,
-a bottom-out missing its `recoveryPrompt`, and an `learnerIDK: true` not followed by a level-down.
+a bottom-out missing its `recoveryPrompt`, and an `learnerIDK: true` followed by a same-level practice hint.
+Direct teaching is checked separately and cannot be labelled as a practice answer to bypass the ladder.
 
 ## facts.json
 
@@ -200,7 +204,7 @@ A single OBJECT: the learner's current placement plus the mastery and review rec
 {
   "learner": "alex",
   "topic": "beam-deflection",
-  "delivery": "html-card",
+  "delivery": "terminal-text",
   "bloomLevel": "Analyze",
   "dreyfusStage": "advanced-beginner",
   "subskills": {
@@ -230,12 +234,11 @@ A single OBJECT: the learner's current placement plus the mastery and review rec
 
 Field rules:
 
-- `delivery` - how the explanation is rendered: `html-card` (default - definition + worked example go to a
-  `material/concept-NN.html` card, dialogue stays in the terminal) or `terminal-text` (opt-out - explanation
-  as terminal prose). The gate ignores this field; it only steers the tutor's delivery.
-- `bloomLevel` - the cognitive-demand rung (`Remember | Understand | Apply | Analyze | Evaluate | Create`).
-  `dreyfusStage` - the skill stage (`novice | advanced-beginner | competent | proficient | expert | master`).
-  Both are defined in `mastery-ladder.md`; set them in DIAGNOSE from the highest probe passed without hints.
+- `delivery` - `terminal-text` by default (including an absent field); `html-card` opts into supplemental
+  cards. Respect explicit preferences while retaining core teaching in chat.
+- `bloomLevel` and `dreyfusStage` - observed placement, or `null` if unmeasured. Do not infer a level from
+  a new chapter or absent history. Allowed non-null values are defined in `mastery-ladder.md`.
+
 - `subskills` - a map of subskill name to current accuracy (0-1). `zpdTarget` names the subskill in the
   40-70% band - the just-reachable next step the tutor works.
 - `masteredConcepts[]` - one entry per concept that has reached mastery. Each carries:
@@ -248,6 +251,55 @@ Field rules:
 - `reviewSchedule` - `[ { "conceptId", "due" } ]` retrieval due-markers at `1d` / `1w` / `1m`, consumed by
   `review.md`.
 
+## Concept progress and resume pointers
+
+New vaults use `conceptProgress: []` and null pointers until the actual chapter/concepts are known.
+Each concept entry records its current state separately from mastery certification:
+
+```json
+{
+  "currentChapter": "day15",
+  "currentConcept": "thread-basics",
+  "lastInteractionAt": null,
+  "nextAction": "teach",
+  "conceptProgress": [
+    {
+      "id": "thread-basics",
+      "status": "not-started",
+      "lastTaughtAt": null,
+      "lastResponse": null,
+      "nextAction": "teach"
+    }
+  ]
+}
+```
+
+- `status`: `not-started` (known untaught), `taught` (explanation actually delivered), `practicing`
+  (learner attempting taught content), `mastered` (independent critic certification), or `null` (unknown).
+  Absence of a record means unknown, not a failed assessment and not evidence of previous learning.
+- `lastTaughtAt`: ISO timestamp with timezone when explanation was delivered, otherwise `null`. Creating
+  a vault/card does not set it. For an explicit report of prior study with unknown time, keep it null and
+  attach `learningEvidence: { "source": "learner-report", "detail": "<actual report>" }`; use
+  `teaching-record` or `observed-work` for other evidence. Do not invent dates.
+- `lastResponse`: latest actual learner response string, or `null` before a response; never a prediction.
+- `nextAction`: `teach`, `check-understanding`, `practice`, `review`, `resume` or `null` if undecided.
+  `not-started` permits only `teach`/null. `taught`/`practicing` require a teaching timestamp or explicit
+  learning evidence. `mastered` additionally requires a matching certified `masteredConcepts[]` entry.
+- `currentChapter`/`currentConcept`: exact current chapter and stable concept id; null if unknown.
+  A non-null current concept references `conceptProgress[]`. Top-level `nextAction` matches that entry.
+- `lastInteractionAt`: actual latest interaction ISO timestamp with timezone, not a fabricated session time.
+
+After every interaction, append actual teaching/response events to claims, append a grading only for a
+received response, and update these current-state fields before ending the turn. Do not mark mastered
+without the existing independent gate. A failed review demotes the progress status to `taught` or
+`practicing` and updates mastery records consistently.
+
+Legacy compatibility: these added fields are optional. Read existing fields and actual history as-is;
+missing values remain unknown. Add new fields only as evidence becomes available, without bulk-filling
+old learning dates, responses or achievements. If older claims establish teaching, reference that actual
+record in `learningEvidence`. These checks validate recorded consistency, not whether a model really
+explained something well; semantic review remains necessary.
+
 ## Which file feeds which sub-gate
 
 | Control file | Fields read | Sub-gate | What it proves |
@@ -259,19 +311,22 @@ Field rules:
 | lesson-claims.json + facts.json | `concepts[].factual / factRefs` -> `facts.json[].id / url` | integrity | every factual claim resolves to a real sourced url |
 | ladder-state.json | `masteredConcepts[].novelTransfers / representationId / reteachHistory` | mastery | >= 2 unprompted novel transfers before mastered; re-teach changes representation |
 
+The optional progress checks validate recorded consistency and cannot establish teaching quality.
+
 In one line: **claims -> never-vague / structure / hint-ladder / modality (and integrity with facts);
 ladder-state -> mastery; facts -> integrity.**
 
 ## Append discipline
 
-- **Append, never silently rewrite.** Each new turn appends a new entry to `concepts`, `gradings`, and
-  `turns`; you never edit or delete a prior claim. The gate audits the full history - quietly rewriting a
+- **Append, never silently rewrite.** Append actual teaching, responses and hint events to the relevant
+  arrays; append a grading only after an answer. Never edit or delete a prior claim. The gate audits the full history - quietly rewriting a
   claim that failed hides the violation and breaks the no-self-approval rule.
 - **Correct by superseding.** To fix a wrong earlier claim, append a new concept entry carrying
   `"supersedes": "<old-id>"`. The old entry stays as the record of what was taught.
 - **Re-teach appends a new representation.** A failed concept is re-taught as a new entry with a different
   `representationId`, logged in `reteachHistory`; the mastery sub-gate confirms the ids differ.
-- **ladder-state pointers update in place; records append.** `bloomLevel`, `zpdTarget`, and `subskills`
+- **ladder-state pointers update in place; records append.** `conceptProgress`, resume pointers,
+  `bloomLevel`, `zpdTarget`, and `subskills`
   accuracy are current-state and may be overwritten as the learner moves; `masteredConcepts`,
   `novelTransfers`, and `reviewSchedule` only grow. A failed spaced retrieval demotes a concept out of
   `masteredConcepts` and re-enters the teach loop (`review.md`).

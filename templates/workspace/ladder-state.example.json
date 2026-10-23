@@ -1,23 +1,15 @@
 {
-  "topic": "beam-deflection",
-  "delivery": "html-card",
-  "bloomLevel": "Analyze",
-  "dreyfusStage": "advanced-beginner",
-  "subskills": { "bending-stress": 0.8, "second-moment-of-area": 0.7, "deflection-scaling": 0.6 },
-  "zpdTarget": "deflection-scaling",
-  "masteredConcepts": [
-    {
-      "id": "bending-stress",
-      "mastered": true,
-      "representationId": "ruler-cantilever",
-      "novelTransfers": [
-        { "passed": true, "unprompted": true },
-        { "passed": true, "unprompted": true }
-      ]
-    }
-  ],
-  "reviewSchedule": [
-    { "conceptId": "bending-stress", "due": "1d" },
-    { "conceptId": "second-moment-of-area", "due": "1w" }
-  ]
+  "topic": "new-topic",
+  "delivery": "terminal-text",
+  "bloomLevel": null,
+  "dreyfusStage": null,
+  "subskills": {},
+  "zpdTarget": null,
+  "currentChapter": null,
+  "currentConcept": null,
+  "lastInteractionAt": null,
+  "nextAction": "teach",
+  "conceptProgress": [],
+  "masteredConcepts": [],
+  "reviewSchedule": []
 }

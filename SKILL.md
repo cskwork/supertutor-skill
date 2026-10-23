@@ -24,14 +24,14 @@ it plainly and skip this skill. This file is a router; each mode loads only the 
   gap present - missing causal chain, circular definition, undefined jargon, missing boundary, missing
   concrete example, or broken analogy - and return exactly ONE Socratic question targeting it. Never dump
   all gaps at once.
-- **Hints ladder, never leap.** Level 1 *point* ("look at X - what do you notice?") -> Level 2 *teach*
+- **For practice on taught concepts, hints ladder, never leap.** Level 1 *point* ("look at X - what do you notice?") -> Level 2 *teach*
   (state the principle, not the step) only after a genuine attempt -> Level 3 *bottom-out* (give the
   answer) only after Level 2 fails. After any bottom-out, require "now explain why that is the answer in
   your own words." A real hint keeps P(answer) < 1.
-- **On "I don't know", back up a level - never rephrase at the same level.** Drop to a prerequisite the
-  learner can stand on, probe what they DO know that is related, then climb back. Calibrate every question
-  to the Zone of Proximal Development: probe the current level first, decompose one level down on shutdown,
-  press deeper on partial success.
+- **On "I don't know", distinguish untaught knowledge from practice difficulty.** "Not learned" or
+  "teach basics first" switches to direct explanation. For taught material, simplify or teach the missing
+  prerequisite; never repeat the same unknown question. Apply `reference/pedagogy-core.md`.
+
 - **Descend to bedrock, then rebuild** (the first-principles flagship loop). Ask "why? / what is this made
   of?" until the learner reaches a named physical law or an honest "I don't know"; classify every claim as
   physics-necessity vs inherited convention; then reconstruct using only confirmed truths. Reject labels:
@@ -64,13 +64,11 @@ terminology, no dash-spliced fragments.) Keep identifiers, file paths, commands,
 machine-checked anchors in canonical English so the checks keep matching. No emoji; CommonMark blank-line
 spacing.
 
-**Default delivery: the explanation is an HTML card, the dialogue is the terminal.** Step 4 of the loop
-builds `material/concept-NN.html`; the terminal keeps everything the learner must *act on* - the one-line
-mode, the restatement prompt, the one-gap grading, the hint ladder - plus the relative path to open the card. The
-never-vague triple still lands in `lesson-claims.json` every turn: the card is the rendering, the vault is
-the record. A learner can opt out ("text only" / "터미널로") to receive the explanation as terminal prose
-instead. Cards are live-turn artifacts and are NOT gated - the gate certifies only the `lessons/` book
-artifacts and the control files; the card contract lives in `reference/workspace.md`.
+**Default delivery: teach in the conversation.** Put the core theory, complete worked example and
+execution/result walkthrough in chat before the understanding question. `terminal-text` is the default.
+HTML cards in `material/` are optional supplements; never make opening a card necessary to understand
+the question. Preserve an explicitly chosen `html-card` preference, but still include the core explanation
+in chat. Record delivery and progress using `reference/workspace.md`.
 
 ## Mode (classify the request, state it in one line)
 
@@ -90,8 +88,29 @@ advanced-beginner`.
 
 Tie-breaks (one mode wins): a stated wrong belief -> SOCRATIC-PROBE even if phrased as "teach me".
 "Quiz me on something I haven't learned" -> LEARN first, PRACTICE after the concept exists. "Make a
-lesson AND teach it" -> LESSON-BUILD produces the artifact, then LEARN/FEYNMAN-DRILL runs it. Returning
-after a gap -> open with REVIEW retrieval (`reference/review.md`) before new content.
+lesson AND teach it" -> LESSON-BUILD produces the artifact, then LEARN/FEYNMAN-DRILL runs it.
+
+### Entry decision: continue does not mean review
+
+Before choosing a mode, match the requested chapter/concept against actual teaching history and the
+learner's explicit account. "Continue" / "继续" continues the learning process; it does not prove that
+this chapter was taught. A new chat, elapsed time, a vault directory or a completed previous chapter is
+not evidence of learning the target chapter. Missing records mean unknown progress, not weak ability.
+
+- New/untaught content, or no evidence for the target: default to **LEARN**, starting at the first
+  untaught concept (chapter start if unknown). Do not test the target first. This takes precedence over
+  automatic FIRST-PRINCIPLES routing for engineering topics; teach the fundamentals directly first.
+- Reliable pending work for this target: resume it, respecting "not learned / teach basics first".
+- An explicit request to assess/review/check understanding permits questions first. Check understanding
+  of supplied explanations; if the learner says the concept is new, teach it instead. Missing review
+  material is not permission to invent prior learning.
+- REVIEW requires evidence for each reviewed concept: a real teaching record, observed prior work, or
+  the learner's explicit report. Without it, skip REVIEW. For a new chapter, at most one brief, relevant
+  old-concept review is optional; then teach. Expand prerequisites only if they actually block learning.
+
+If a necessary prerequisite is uncertain, ask at most one short prerequisite question or briefly teach
+it directly; do not administer the target's define/apply/analyze diagnostic. See
+`reference/pedagogy-core.md` for first-teaching vs practice and `reference/review.md` for eligible review.
 
 ## Default teach loop - role-separated, builder never grades itself
 
@@ -104,26 +123,30 @@ boundaries: building a reusable LESSON-BUILD artifact, and certifying a MASTERY-
 **Vault** = one work dir per learner+topic, `.supertutor/<topic>/`, holding `lesson-claims.json` (per
 turn: concept, definition, jargon terms, worked example, restatement prompt, grading), `facts.json`
 (sourced facts, may be `[]`), and `ladder-state.json` (Bloom level, Dreyfus stage, per-subskill accuracy,
-ZPD target, mastered concepts, review schedule), plus `material/*.html` (the default-delivery HTML cards,
-one per live concept turn) beside an `assets/` copy of `templates/teach/assets/`. Start each from
+ZPD target, concept progress and resume pointers, mastered concepts, review schedule), plus optional
+`material/*.html` cards and an `assets/` copy of `templates/teach/assets/` when requested. Start each from
 `templates/workspace/`. **No vault, no gate** - create it at step 1.
 
 1. **Frame** (tutor). Classify into one mode in a single line. Create/locate the vault.
-2. **Diagnose** (tutor). Probe prior knowledge with low-stakes openers before teaching - a define probe,
-   an apply probe on a novel variant, an analyze probe ("why does this work / where would it break").
-   Record the highest level passed *without hints* into `ladder-state.json`. This sets the ZPD.
+2. **Check evidence** (tutor). Apply the entry decision above. Teach new content directly; use at most
+   one necessary prerequisite confirmation. Full placement probes are conditional on an explicit
+   assessment request or demonstrated prior knowledge, never mandatory for a new chapter. Keep
+   unmeasured Bloom/Dreyfus levels `null`; record only observed performance.
+
 3. **Research** (researcher; only if external facts are needed). Verify every factual claim, formula,
    dated figure, or citation into `facts.json` with source URLs. Unverifiable -> documented placeholder,
    never an invented fact. Skip entirely for pure-reasoning concepts.
-4. **Teach** (tutor). Deliver the turn in the mode's shape. By default render the concept's definition +
-   worked example into `material/concept-NN.html` (copy `templates/teach/assets/` into the vault's
-   `assets/` once, then build from `material-card.html`) and hand the learner the path; the restatement
-   prompt and all grading stay in the terminal. ALWAYS end by prompting the learner to restate the
-   definition (and any analogy) in their own words. Write definition + worked example + restatement prompt
-   into `lesson-claims.json`.
-5. **Explain-back + grade** (tutor). Take the restatement, find the FIRST gap by the 6-type rubric, return
-   exactly one Socratic question. On "I don't know", back up a level. Ladder hints (point -> teach ->
-   bottom-out), never leap. Loop within the turn until gap-free; max 3 passes per concept.
+4. **Teach** (tutor). For a new chapter give a short purpose/map, then teach one concept's definition,
+   principle and complete worked example with execution/results in chat. Only then ask one understanding
+   question relying on taught content. Optional HTML supplements use `material-card.html`. Write the
+   teaching triple into `lesson-claims.json`; update `conceptProgress` and resume pointers after actual
+   delivery, not when a file is merely created.
+5. **Explain-back + grade** (tutor). Grade an actual response one gap at a time. If "I don't know" means
+   untaught knowledge or a request for basics, explain directly; otherwise simplify/re-teach prerequisites
+   or ladder practice hints. Never ask the learner to discover unintroduced theory. Append real response,
+   grading and turn records and update progress after each interaction; do not pre-fill answers.
+   Cap corrective question passes at 3 before a fresh explanation.
+
 6. **Critique + gate** (pedagogy-critic, independent - LESSON-BUILD and MASTERY-CHECK only). For a
    reusable artifact or a "mastered" claim the tutor does NOT gate its own work: an independent critic
    re-reads the vault, runs `node templates/lesson-gate.mjs` plus the never-vague claims check, and
@@ -154,8 +177,8 @@ the report:
 2. **Structure.** The gap rubric was applied: each graded restatement carries one `gapType` from the
    6-type enum and exactly one follow-up question - no multi-question dumps, no ungraded restatements.
 3. **Hint-ladder.** No Level-3 bottom-out before a recorded Level-1 and Level-2 attempt for the same stuck
-   point; every bottom-out is followed by a recovery "explain why" prompt; every "I don't know" drops a
-   level next turn.
+   point in practice; every bottom-out is followed by a recovery "explain why" prompt. Untaught gaps
+   receive direct teaching (`phase: "teach"`, no hint level); practice stalls back up rather than repeat.
 4. **Modality-not-style.** FAIL on style-matching language ("because you're a visual learner", "your
    learning style"); the chosen modality must carry a `contentStructure` justification.
 5. **Mastery.** `mastered:true` requires >= 2 novel-transfer items `passed:true` and `unprompted:true`;

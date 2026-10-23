@@ -1,6 +1,6 @@
 # mastery-ladder - place the learner, pick the just-reachable step, gate the advance
 
-Loaded in PRACTICE mode and in the DIAGNOSE step of every mode. It answers three questions: where is
+Loaded in PRACTICE mode and for conditional placement when assessment is requested or prior knowledge is established. It answers three questions: where is
 the learner now (a Bloom cell plus a Dreyfus stage), what is the next task that just fits (the Zone of
 Proximal Development), and when may they advance (the mastery gate). `pedagogy-core.md` is the law this
 obeys; this file is the placement-and-progression instrument. For load sequencing and worked examples
@@ -20,12 +20,17 @@ MASTERY and HINT-LADDER sub-gates read it.
 - `masteredConcepts` - concepts that cleared the gate; only set after two clean transfers.
 - `reviewSchedule` - spaced-retrieval dates (1 day / 1 week / 1 month); see `review.md`.
 
-## Placement: the three-probe diagnostic (run this before you teach)
+## Placement: optional probes for established knowledge or requested assessment
 
-Probe prior knowledge with low-stakes questions, ascending in demand. Record the highest level passed
-WITHOUT a hint. A hesitation past ~60 seconds with no partial attempt marks the ZPD boundary - give a
-worked example and stop climbing (Vygotsky 1978; Wood, Bruner & Ross 1976). Running example: simple DC
-circuits.
+For an untaught/unknown chapter, start LEARN with direct explanation. Do not test definitions,
+applications or analysis of unintroduced material. At most one necessary prerequisite confirmation,
+or teach that prerequisite briefly. An explicit request to assess/review/check permits questions first;
+stop and teach if the learner says it is new. Missing records do not imply low ability.
+
+Only when placement is appropriate, use the following probes progressively, one at a time. Stop at the
+first knowledge gap and explain it; do not administer all three mechanically. Record the highest
+unaided performance actually observed; unmeasured `bloomLevel`/`dreyfusStage` stay null. Do not infer
+failure from elapsed time or silence. Running example for a learner with circuit knowledge:
 
 1. **Define probe** (Remember/Understand). "State Ohm's law and what each letter means." Pass = they
    give V = I x R and name voltage, current, resistance in their own words.
@@ -70,7 +75,7 @@ same topic, so probe both axes.
 ## Dreyfus ladder - the shift from following rules to acting on intuition
 
 Five stages (plus master) describing how the learner's relationship to rules changes as skill grows
-(Dreyfus & Dreyfus 1980). Detect the stage with three probes, then match the instruction to it -
+(Dreyfus & Dreyfus 1980). Infer the stage from observed work or optional justified probes -
 explicit rules help a novice and actively HARM an expert by forcing automatic skill back into slow
 deliberation.
 
@@ -165,7 +170,7 @@ tutor never certifies its own work.
 
 ## When this governs
 
-DIAGNOSE (placement, every mode) and PRACTICE (the deliberate-practice loop). It sets `zpdTarget` and
+conditional placement (not a prerequisite for teaching new content) and PRACTICE (the deliberate-practice loop). It sets `zpdTarget` and
 `bloomLevel`/`dreyfusStage` that every other mode reads. Sequencing of the chosen step is in
 `cognitive-load.md`; the explain-back grading is in `feynman.md`; the advance is certified in
 `interview-check.md`; spaced retrieval of mastered concepts is in `review.md`. Evidence base and full

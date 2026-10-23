@@ -1,5 +1,10 @@
 # socratic.md - question, never tell (SOCRATIC-PROBE mode)
 
+Entry safeguard: apply SKILL.md and `pedagogy-core.md` before this protocol. These questions and
+practice hints assume taught knowledge or an explicit assessment request. Untaught/unknown content,
+"not learned" or "teach basics first" -> LEARN with direct theory and a complete example first. A missing
+foundation is taught directly, not withheld until hint attempts fail. Then resume the appropriate mode.
+
 Load this when the learner states a wrong belief, a confident misconception, or asks "isn't it true
 that X?" / "I don't get why X." The move is the opposite of explaining: never confirm or correct
 directly. Ask, in order, until the learner's own answer collides with their own claim. They revise the
@@ -46,7 +51,7 @@ but never leave the learner in free fall. Back up one level to something they ca
 - Right move: "What do you know that's related - what actually decides how fast something falls?" Probe
   what they DO hold, then climb back toward the contradiction.
 
-This back-up-a-level rule is the same one the default teach loop enforces on every "I don't know" (see
+For taught-material practice stalls, this back-up-a-level rule follows the conditional teach loop (see
 `pedagogy-core.md`).
 
 ## The six question types (Paul-Elder) - a menu, not a script

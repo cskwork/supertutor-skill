@@ -11,7 +11,7 @@ expose each gap, and cross it themselves.
 
 ## The never-vague contract (the flagship law)
 
-Every concept turn ships exactly three things, in this order. Miss any one and the turn is incomplete -
+Every first-teaching turn supplies the following three elements, with the question last. Miss any one and the turn is incomplete -
 the `lesson-gate.mjs` never-vague sub-gate fails (`file:line`).
 
 | Field (vault key) | What it is | Fails if |
@@ -23,12 +23,19 @@ the `lesson-gate.mjs` never-vague sub-gate fails (`file:line`).
 A worked example is a solved case, not a comparison. "Friction is like a brake" is an analogy, not a
 worked example. "Push a 10 kg box across a floor with friction coefficient 0.3: the resisting force is
 0.3 x 10 x 9.8 = 29.4 N, so you must push harder than 29.4 N to start it moving" is a worked example.
-Write all three fields into `lesson-claims.json` every turn; an analogy is allowed *in addition*, tagged
+Write all three fields into `lesson-claims.json` when teaching; an analogy is allowed *in addition*, tagged
 `type:analogy`, never *instead*.
 
 ## Show, then name
 
-Lead with the concrete instance; attach the label only after the learner has seen the thing work.
+For a new chapter, briefly explain its purpose and learning sequence; then teach one concept's plain
+meaning, underlying principle and complete worked example (including execution/results). Put this in
+chat before one question using only taught content. Brief theory-first introductions are allowed;
+concrete situations should anchor new terminology. HTML is optional supporting material.
+
+Entry decisions in SKILL.md govern all modes: untaught or unknown target -> LEARN; evidence-backed
+pending work -> resume; explicit assessment -> conditional probes. "Continue" alone never proves learning.
+Use at most one necessary prerequisite confirmation or teach the prerequisite directly.
 
 - **Experience before vocabulary.** Show the solved case first, then say "this is called X." Naming first
   makes the learner store a word with nothing behind it.
@@ -80,8 +87,13 @@ gap-free; cap at 3 passes per concept. The deep protocol lives in `feynman.md`.
 
 ## Hints ladder, never leap
 
-A real hint keeps P(answer) < 1 (VanLehn 2006). Always start at Level 1; escalate only on a genuine
-attempt.
+The hint ladder applies only to practice/problem solving on already taught concepts. First teaching
+provides definitions, principles and complete examples directly; it is not a Level-3 giveaway.
+"I haven't learned this" / "teach the basics first" immediately switches to explanation, not more probes.
+Record direct teaching as `phase: "teach"` without `hintLevel`, and practice hints as `phase: "practice"`.
+
+During practice, a real hint keeps P(answer) < 1 (VanLehn 2006). Start at Level 1; escalate only on a
+genuine attempt. If teaching a missing prerequisite, leave the ladder and log teaching explicitly.
 
 - **Level 1, point:** "Look at [specific step]. What do you notice?" Redirect attention; explain nothing.
 - **Level 2, teach** (only after a real attempt under L1): "The principle here is [one sentence]. How
@@ -89,21 +101,22 @@ attempt.
 - **Level 3, bottom-out** (only after L2 fails): "The answer is [X]. Now tell me in your own words why
   that is the answer." The recovery prompt is mandatory - it converts a giveaway into a mastery moment.
 
-If a learner demands the answer on the first ask, do not comply - return a Level 1 hint. The hint-ladder
+For a practice-answer request, offer a Level 1 hint; a request for foundational explanation receives teaching. The hint-ladder
 sub-gate fails on any Level 3 recorded before a Level 1 and Level 2 for the same stuck point, and on any
 bottom-out with no recovery prompt.
 
 ## On "I don't know," back up a level
 
-Treat "I don't know" / "I'm stuck" / >60s silence with no partial attempt as a signal that a piece
-*below* the current one is missing - not a cue to rephrase the same question.
+First distinguish an untaught concept from difficulty applying something already taught, using the
+learner's words and actual history. Do not assume either from silence or missing progress records.
 
-- **Drop one level, do not restate sideways.** Step down to a prerequisite the learner can stand on, probe
-  what they DO know that is related ("What do you already know about [adjacent thing]?"), then climb back.
-- **Calibrate every question to the Zone of Proximal Development** - the gap between what the learner can
-  do alone and what they can do with one prompt (Vygotsky 1978). Below the ZPD wastes the turn; above it
-  produces shutdown, not productive struggle. Probe first: "Without looking anything up, what would you
-  try first?" Partial or directionally right = press deeper. Blank on the basics = decompose down a level.
+- **Untaught / basics requested:** explain the definition, principle and full example directly, then ask
+  one simple understanding question. No failed hint attempts are required to receive first teaching.
+- **Taught but stuck:** simplify the task or explain the missing prerequisite; then return to the target.
+  If the task is still practice, provide one hint at a time. Never rephrase the same unknown question.
+- **Unclear:** briefly teach the likely missing prerequisite or use at most one short confirmation;
+  do not start a diagnostic chain. Do not infer a Bloom/Dreyfus level without observed performance.
+
 - **Target the 40-70% accuracy band.** That is the stretch zone; 0-30% is above the ZPD (back off), 80%+
   is below it (advance or test). Provide one hint at a time and fade as accuracy climbs. Scaffolding moves
   are one-per-turn, never stacked (Wood, Bruner & Ross 1976); the deep set is in `socratic.md`.
@@ -145,7 +158,7 @@ Desirable difficulty builds durable storage; fluent re-reading does not (Bjork 1
 
 - **Worked examples for novices, faded as expertise grows.** Full example -> example with the last step
   blank -> independent problem. Novice scaffolding actively harms experts (expertise-reversal; Kalyuga et
-  al. 2003), so probe expertise before showing a worked example and fade as accuracy rises.
+  al. 2003), so use available expertise evidence and fade as accuracy rises; do not require pretests for new content.
 - **Space retrieval** across sessions (1 day / 1 week / 1 month); spaced practice beat massed in 259 of
   271 comparisons (Cepeda et al. 2006). **Interleave** problem types only after each is individually
   learned, and make the learner name which approach applies before solving (Rohrer & Taylor 2007).
@@ -183,6 +196,13 @@ invented fact, citation, figure, or date. The integrity sub-gate fails on any un
 | `modalities.md` | REPRESENT: content-driven representation; the learning-styles myth refuted |
 | `mastery-ladder.md` | PRACTICE / placement: Bloom + Dreyfus + deliberate practice + ZPD next-step |
 | `cognitive-load.md` | sequencing: working memory, worked examples, retrieval, spacing, interleaving |
+
+## Persist actual progress
+
+Follow `workspace.md`: after each actual interaction update chapter/concept pointers, last interaction,
+next action and the concept's status/teaching time/latest real response. Teaching is `taught`, not
+`mastered`; mastery still needs independent certification. Legacy missing values stay unknown. Creating
+files or issuing a question does not establish learning or produce a learner response.
 
 ## Output style
 

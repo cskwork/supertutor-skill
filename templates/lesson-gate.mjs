@@ -77,6 +77,53 @@ function checkHtmlLesson(file) {
   if (STYLE_RE.test(html)) fail(file, "modality-not-style", "uses learning-style language (Pashler 2008: no evidence)");
 }
 
+// Optional additive progress fields. Missing legacy fields remain unknown, never inferred.
+function checkProgress(ladder, file) {
+  const actions = ["teach", "check-understanding", "practice", "review", "resume"];
+  const statuses = ["not-started", "taught", "practicing", "mastered"];
+  const timestamp = (v) => typeof v === "string" &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(v) && Number.isFinite(Date.parse(v));
+  const optional = (v, check) => v === undefined || v === null || check(v);
+  const error = (loc, message) => fail(file, loc, `progress: ${message}`);
+  if (!optional(ladder.delivery, (v) => ["terminal-text", "html-card"].includes(v))) error("delivery", "unknown delivery");
+  if (!optional(ladder.currentChapter, isStr)) error("currentChapter", "must be a non-empty string or null");
+  if (!optional(ladder.currentConcept, isStr)) error("currentConcept", "must be a non-empty string or null");
+  if (!optional(ladder.nextAction, (v) => actions.includes(v))) error("nextAction", "unknown action");
+  if (!optional(ladder.lastInteractionAt, timestamp)) error("lastInteractionAt", "expected ISO timestamp with timezone or null");
+  if (ladder.conceptProgress === undefined) {
+    if (ladder.currentConcept != null) error("currentConcept", "cannot point to absent conceptProgress");
+    return;
+  }
+  if (!Array.isArray(ladder.conceptProgress)) { error("conceptProgress", "must be an array"); return; }
+  const ids = new Set();
+  for (const [i, c] of ladder.conceptProgress.entries()) {
+    const loc = `conceptProgress[${i}]`;
+    if (!c || typeof c !== "object" || Array.isArray(c)) { error(loc, "expected object"); continue; }
+    if (!isStr(c.id) || ids.has(c.id)) error(loc, "missing or duplicate concept id");
+    ids.add(c.id);
+    if (!optional(c.status, (v) => statuses.includes(v))) error(loc, "unknown status");
+    if (!optional(c.lastTaughtAt, timestamp)) error(loc, "invalid teaching timestamp");
+    if (!optional(c.lastResponse, (v) => typeof v === "string")) error(loc, "response must be actual text or null");
+    if (!optional(c.nextAction, (v) => actions.includes(v))) error(loc, "unknown nextAction");
+    const e = c.learningEvidence;
+    const evidence = e && ["learner-report", "teaching-record", "observed-work"].includes(e.source) && isStr(e.detail);
+    if (e != null && !evidence) error(loc, "invalid learningEvidence");
+    if (c.status === "not-started" && (c.lastTaughtAt != null || evidence || (c.nextAction != null && c.nextAction !== "teach")))
+      error(loc, "not-started cannot claim prior teaching or schedule a quiz/review");
+    if (["taught", "practicing", "mastered"].includes(c.status) && !timestamp(c.lastTaughtAt) && !evidence)
+      error(loc, "learned status needs actual teaching timestamp or explicit evidence");
+    if (c.status === "mastered") {
+      const m = (Array.isArray(ladder.masteredConcepts) ? ladder.masteredConcepts : []).find((m) => m.id === c.id && m.mastered === true);
+      if (!m) error(loc, "mastered status needs matching mastery record (checked by mastery gate)");
+    }
+  }
+  if (ladder.currentConcept != null) {
+    const c = ladder.conceptProgress.find((c) => c && c.id === ladder.currentConcept);
+    if (!c) error("currentConcept", "does not reference conceptProgress");
+    else if (ladder.nextAction != null && c.nextAction !== ladder.nextAction) error("nextAction", "disagrees with current concept");
+  }
+}
+
 // ---- vault sub-gates --------------------------------------------------------
 function checkVault(dir) {
   const claimsFile = join(dir, "lesson-claims.json");
@@ -147,6 +194,16 @@ function checkVault(dir) {
   const seen = new Map(); // stuckPoint -> max level reached
   turns.forEach((t, i) => {
     const sp = t.stuckPoint || "(stuck)";
+    if (t.phase !== undefined && !["teach", "practice"].includes(t.phase))
+      fail(claimsFile, `turns[${i}]`, "hint-ladder: unknown phase");
+    if (t.phase === "teach") {
+      if (t.hintLevel !== undefined)
+        fail(claimsFile, `turns[${i}]`, "hint-ladder: direct teaching must omit hintLevel");
+      if (!isStr(t.conceptId) || !concepts.some((c) => c.id === t.conceptId))
+        fail(claimsFile, `turns[${i}]`, "hint-ladder: teaching event needs a recorded conceptId with definition/example");
+      seen.delete(sp); // Teaching is not a practice answer; subsequent practice starts fresh.
+      return;
+    }
     const lvl = Number(t.hintLevel);
     if (lvl === 3) {
       if ((seen.get(sp) || 0) < 2) fail(claimsFile, `turns[${i}]`, `hint-ladder: Level-3 bottom-out on "${sp}" before a Level-1 and Level-2 attempt`);
@@ -155,7 +212,7 @@ function checkVault(dir) {
     if (lvl) seen.set(sp, Math.max(seen.get(sp) || 0, lvl));
     if (t.learnerIDK === true) {
       const next = turns[i + 1];
-      if (next && Number(next.hintLevel) >= lvl && (next.stuckPoint || "(stuck)") === sp)
+      if (next && next.phase !== "teach" && Number(next.hintLevel) >= lvl && (next.stuckPoint || "(stuck)") === sp)
         fail(claimsFile, `turns[${i + 1}]`, "hint-ladder: 'I don't know' must drop a level (back up to a prerequisite), not repeat the same level");
     }
   });
@@ -172,6 +229,7 @@ function checkVault(dir) {
     const lr = loadJson(ladderFile);
     if (!lr.ok) fail(ladderFile, "load", `unreadable ladder-state.json (${lr.error})`);
     else ladder = lr.data || {};
+    checkProgress(ladder, ladderFile);
     if (ladder.bloomLevel && !BLOOM.includes(ladder.bloomLevel)) fail(ladderFile, "bloomLevel", `not in ${BLOOM.join("|")}`);
     if (ladder.dreyfusStage && !DREYFUS.includes(ladder.dreyfusStage)) fail(ladderFile, "dreyfusStage", `not in ${DREYFUS.join("|")}`);
     for (const m of ladder.masteredConcepts || []) {

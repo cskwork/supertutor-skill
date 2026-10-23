@@ -1,43 +1,31 @@
 # review.md - returning sessions: spaced retrieval + interleaving
 
-Load this when a learner comes back after a gap, or when `interview-check.md` schedules the next
-visit. Its job: consolidate prior concepts and kill the fluency illusion before a single line of new
-content. The illusion is the enemy here - smooth, fast recall during a session feels like mastery and
-is not (Bjork 1994). A returning session that opens with new material instead of retrieval wastes the
-one moment when forgetting can be measured and reversed.
+Load this for explicitly requested review or review of concepts with clear prior-learning evidence.
+A returning chat, a time gap, a vault directory or the word "continue" alone does not establish that
+any target concept was taught. SKILL.md entry decisions apply before these review techniques.
 
-This mode reads and writes the vault (`workspace.md`): `ladder-state.json` holds `reviewSchedule`,
-`masteredConcepts`, and per-subskill accuracy; every review outcome updates them. No vault, no gate.
+Read/write `ladder-state.json` (`workspace.md`), including `conceptProgress`, actual prior teaching,
+`reviewSchedule` and `masteredConcepts`. No eligible concept -> skip review and teach the requested
+chapter with LEARN; missing progress stays unknown. Never invent prior lessons.
 
-## Open closed-book, every time
+## Eligible closed-book retrieval
 
-`Closed-book retrieval` = the learner answers from memory with all notes, the prior lesson, and this
-chat history hidden. `Fluency illusion` = mistaking how easily something comes to mind right now
-(retrieval strength) for how deeply it is learned (storage strength) - the two are independent, and
-re-reading inflates the first while barely moving the second (Bjork 1994; Roediger & Karpicke 2006).
+Review only concepts backed by actual teaching/observed work or the learner's explicit learning report.
+For a new chapter, at most one brief relevant old-concept review is optional, then deliver new teaching.
+Do not turn this into multi-round prerequisite diagnosis unless that prerequisite demonstrably blocks
+understanding. If the learner has not learned it, explain directly instead of continuing to quiz.
 
-So the first move of any returning session is a production question on prior material, before anything
-new. Never open with "last time we covered X, remember?" - that is recognition, and recognition feeds
-the illusion (Koriat & Bjork 2005).
+For an eligible review, closed-book retrieval means answering from memory rather than rereading. Ask
+one production question, then give feedback. Example: a real prior lesson taught recursion; ask the
+learner to explain the stopping condition in their own words. A partial answer receives one targeted
+follow-up in an explicitly requested review session. In a new-chapter session, briefly correct and
+proceed unless the gap blocks the new material. A complete unprompted response can update review progress.
 
-Exact opening stems (pick the angle, keep it to one):
+Only use these stems with evidence for the named concept:
 
-- Free recall: "Close everything. In your own words, tell me everything you remember about why a beam
-  sags more when it gets longer."
-- Short answer: "Without looking - what single property of the cross-section did we say resists
-  bending, and what happens to the sag if you double the beam's depth?"
-- Apply on a fresh case: "Same idea, new beam: I swap a solid bar for a hollow tube of the same
-  weight. More sag or less? Why?"
-
-Worked example. Last session taught recursion (Bloom-Apply). This session opens:
-
-> "Notes closed. What are the two parts every recursive function must have, and what breaks if one is
-> missing?"
-
-The learner says "a base case and... it calls itself." That is a partial retrieval, not a pass - the
-"what breaks" half is missing. Grade it on the 6-type rubric (`feynman.md`), return one question
-("right - now what specifically happens at runtime if the base case never fires?"), and only then move
-on. A correct, complete, unprompted answer is what counts toward the schedule.
+- Recall: "In your own words, what do you remember about [taught concept]?"
+- Apply: "Using [taught principle], what changes in this new case?"
+- Explain: "Why does [taught mechanism] produce that result?"
 
 ## Schedule by target retention, not by the calendar
 
@@ -143,7 +131,8 @@ Review is not just rehearsal; it is fresh evidence about the ladder. After each 
 3. On a failed spaced retrieval of a `masteredConcepts[]` entry, **demote it**: remove it from
    `masteredConcepts`, lower its accuracy and Bloom/Dreyfus placement to match what they actually
    showed, reset its interval to next-session, and re-enter the teach loop at step 4-5
-   (`pedagogy-core.md`).
+   (`pedagogy-core.md`). Also demote matching `conceptProgress` to `taught`/`practicing`, save
+   the actual response and update resume pointers; do not retain a stale `mastered` progress status.
 4. A demoted concept must be re-taught through a *different* representation than the one that failed
    (the mastery sub-gate rejects a re-teach that reuses the prior representation id) - swap the
    diagram for a scenario, the formula derivation for a worked case (`modalities.md`).
@@ -157,8 +146,8 @@ sees the demotion instead of a stale `mastered:true`.
 
 ## Pitfalls
 
-- Opening with new content. The decay since last session is exactly what review exists to catch; new
-  material before retrieval throws it away.
+- Treating "continue" or a missing record as evidence of prior learning. New chapters need teaching;
+  review is conditional on evidence and must not crowd out the requested new content.
 - Recognition disguised as retrieval. "Remember when we said...?", a multiple-choice prompt, or
   re-reading the old lesson all let familiarity masquerade as recall (Koriat & Bjork 2005).
 - Feedback before the attempt closes. Jumping in with the answer the moment the learner pauses cancels

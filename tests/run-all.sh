@@ -9,6 +9,7 @@ run() { echo; echo "=== $1 ==="; shift; if "$@"; then :; else fails=$((fails+1))
 
 run "skill frontmatter + size gate" node "$ROOT/templates/skill-frontmatter-gate.mjs" "$ROOT"
 run "gate scenarios (pass/fail vault)" bash "$HERE/gate-scenarios.test.sh"
+run "progress and teaching compatibility" node "$HERE/progress-and-teaching.test.mjs"
 run "mode routing contract" bash "$HERE/mode-routing-contract.test.sh"
 run "reference links contract" bash "$HERE/reference-links-contract.test.sh"
 

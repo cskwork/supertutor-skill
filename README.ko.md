@@ -1,5 +1,10 @@
 # /supertutor
 
+> Behavior update: new/unknown chapters now receive teaching before questions; review requires prior-learning
+> evidence. Conversation text is the default, HTML cards are supplemental, and optional progress fields
+> support legacy vaults. The updated English README and SKILL.md describe current behavior; the Korean
+> translation below predates these changes.
+
 [English](README.md) | **한국어**
 
 **누구에게든 무엇이든 진짜 숙달 수준까지 가르칩니다 - first-principles 엔지니어링을 대표 사례로 - Feynman 설명-되돌리기와 Socratic 힌트를 통해, 그리고 튜터가 스스로 승인할 수 없는 gate 뒤에서.**

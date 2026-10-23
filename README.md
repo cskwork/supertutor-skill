@@ -38,6 +38,23 @@ illusion of knowing. `/supertutor` adds the five things a chatbot will not do fo
 The bar to beat is a strong model that reads the real material. `/supertutor` adds only what that bar
 cannot do alone: it makes hidden gaps *visible* and *gated*, instead of trusting a confident restatement.
 
+## New chapters and continuing a course
+
+"Continue" / "继续" does not prove that the target chapter was learned. Match the chapter to actual
+teaching history or the learner's explicit report. With no evidence, start LEARN at the first untaught
+concept (chapter start if unknown), not a review quiz. Reliable pending work is resumed. Explicit
+assessment/review requests allow questions first; unintroduced material is taught directly.
+
+New chapters get a short purpose/map, then one concept's theory, complete example and execution/results
+in chat before an understanding question. At most one necessary prerequisite confirmation, or teach it
+briefly. Optional old-material review must have evidence and stay brief. Practice hints apply after
+teaching; "not learned / teach basics first" switches to explanation.
+
+`ladder-state.json` now distinguishes `not-started`, `taught`, `practicing` and certified `mastered`,
+with chapter/concept resume pointers updated each interaction. Missing legacy fields stay unknown.
+New vaults default to `terminal-text`; HTML cards are optional supplements, with core teaching in chat.
+See `reference/workspace.md` for schemas and compatibility.
+
 ## Modes
 
 State the mode in one line before teaching, e.g. `FIRST-PRINCIPLES - why a beam sags; learner is
@@ -68,20 +85,20 @@ artifact and a MASTERY-CHECK "mastered" claim. The builder never certifies its o
 The work lives in a **vault** = one directory per learner+topic, `.supertutor/<topic>/`, holding
 `lesson-claims.json` (per turn: concept, definition, jargon terms, worked example, restatement prompt,
 grading), `facts.json` (sourced facts, may be `[]`), and `ladder-state.json` (Bloom level, Dreyfus stage,
-per-subskill accuracy, mastered concepts, review schedule), plus `material/*.html` (the default-delivery
-HTML cards, one per live concept turn). **No vault, no gate** - create it at step 1.
+per-subskill accuracy, concept progress, resume pointers, mastered concepts, review schedule), plus
+optional supplemental `material/*.html` cards. **No vault, no gate** - create it at step 1.
 
 1. **Frame** (tutor). Classify into one mode in a single line. Create or locate the vault.
-2. **Diagnose** (tutor). Probe prior knowledge with low-stakes openers - a define probe, an apply probe on
-   a novel variant, an analyze probe - before teaching. Record the highest level passed *without hints*.
+2. **Check evidence** (tutor). Teach unknown/untaught chapters directly; resume evidenced pending work.
+   Use at most one necessary prerequisite confirmation. Full placement is conditional, not mandatory.
+
 3. **Research** (researcher; only if external facts are needed). Verify every claim, formula, or dated
    figure into `facts.json` with source URLs. Unverifiable -> documented placeholder. Skip for pure reasoning.
-4. **Teach** (tutor). Deliver the turn in the mode's shape. By default the explanation (definition + worked
-   example) renders to an HTML card in `material/`; the restatement prompt, grading, and hints stay in the
-   terminal (opt out with "text only"). ALWAYS prompt the learner to restate the definition in their own
-   words. Write definition + worked example + restatement prompt into the vault.
-5. **Explain-back + grade** (tutor). Find the FIRST gap by the 6-type rubric; return one Socratic question.
-   On "I don't know", back up a level - drop to a prerequisite, never rephrase at the same level.
+4. **Teach** (tutor). Deliver core theory, a complete example and execution/results directly in chat,
+   then an understanding question on taught content. HTML cards are optional supplements.
+5. **Explain-back + grade** (tutor). Grade actual responses one gap at a time. Untaught knowledge gets
+   explanation; practice difficulty gets simplified tasks or hints. Update real progress every interaction.
+
 6. **Critique + gate** (pedagogy-critic, independent - LESSON-BUILD and MASTERY-CHECK only). Re-read the
    vault, run `lesson-gate.mjs`, and enumerate every violation as `file:line`. Live turns skip this - the
    tutor self-checks inline.
@@ -119,7 +136,7 @@ FAIL, printed as `file:line` violations shown verbatim in the report. Exit 0 = m
 2. **Structure**: each graded restatement carries one `gapType` from the 6-type enum and exactly one
    follow-up question - no multi-question dumps, no ungraded restatements.
 3. **Hint-ladder**: no Level-3 bottom-out before a recorded Level-1 and Level-2 attempt; every bottom-out
-   is followed by a recovery "explain why" prompt; every "I don't know" drops a level next turn.
+   is followed by a recovery "explain why" prompt; untaught gaps receive direct teaching rather than forced hint attempts.
 4. **Modality-not-style**: FAIL on learning-style language ("because you're a visual learner"); the chosen
    modality must carry a `contentStructure` justification.
 5. **Mastery**: `mastered:true` requires >= 2 novel-transfer items `passed:true` and `unprompted:true`; a
@@ -133,9 +150,8 @@ gate to pass a lesson - fix the lesson.
 
 - **Never vague.** Define every term in plain language; give a concrete real worked example, never a
   hand-wavy analogy.
-- **Hints, not answers.** Point -> teach -> bottom-out; require a recovery explanation after any answer.
-- **Back up on "I don't know."** Drop to a prerequisite the learner can stand on; never rephrase at the
-  same level.
+- **Practice hints after teaching.** Point -> principle hint -> bottom-out; first teaching gives full explanations directly.
+- **Respond to "I don't know."** Teach untaught knowledge directly; simplify or re-teach prerequisites for practice stalls.
 - **Content-driven modality, not learning styles.** Choose the representation by the concept's structure.
   Matching instruction to a learner's "style" has no adequate supporting evidence (Pashler et al. 2008;
   Willingham 2005) - never run a style questionnaire.
